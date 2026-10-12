@@ -1,0 +1,1152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Silicon Shock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:dark;--bg:#06080F;--surface:#0C111D;--surface2:#121A2A;--ink:#EAF0FF;--ink2:#A1ACC7;--ink3:#69748F;--line:#1E2842;--accent:#39D5FF;--accent-soft:#0C2A39;--wafer:#A884FF;--ok:#34E39A;--ok-soft:#0B2C21;--warn:#FFB648;--warn-soft:#33260C;--crit:#FF4F6D;--crit-soft:#3A1220;--shadow:none;--sea:#060B17;--land:#131B2D;--landline:#2B3A5C;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif; --body:"Manrope",system-ui,-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5}
+.shell{max-width:1320px;margin:0 auto;padding-inline:20px;padding-block:18px 48px;display:flex;flex-direction:column;gap:16px}
+header.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:38px;height:38px;border-radius:8px;background:var(--accent);display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.02em}
+.brand h1{font-family:var(--display);font-stretch:85%;font-weight:750;font-size:22px;margin:0;line-height:1.1;text-wrap:balance}
+.brand p{margin:0;color:var(--ink2);font-size:12.5px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--ink2)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
+.chip.sample{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line)}
+nav.tabs button{font:inherit;font-weight:500;color:var(--ink2);background:none;border:0;padding:10px 14px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+nav.tabs button:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:16px;min-width:0}
+.panel h2{font-family:var(--display);font-stretch:88%;font-weight:700;font-size:16px;margin:0 0 4px}
+.panel .sub{color:var(--ink2);font-size:12.5px;margin:0 0 12px;max-width:80ch}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.grid{display:grid;gap:16px}
+.g-kpi{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.g-2{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)}
+.g-2e{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:900px){.g-2,.g-2e{grid-template-columns:minmax(0,1fr)}}
+.kpi{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.kpi .v{font-family:var(--display);font-weight:750;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:14px;font-weight:600;color:var(--ink2);margin-left:3px}
+.kpi .n{font-size:12px;color:var(--ink2)}
+.kpi.warn{border-left:4px solid var(--warn)} .kpi.crit{border-left:4px solid var(--crit)} .kpi.ok{border-left:4px solid var(--ok)}
+.scroll-x{overflow-x:auto}
+svg text{font-family:var(--body)}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.crit{background:var(--crit-soft);color:var(--crit)} .pill.info{background:var(--accent-soft);color:var(--accent)} .pill.mute{background:var(--surface2);color:var(--ink2)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface2)}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.mono{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;min-width:80px;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--accent)}
+.alerts{display:flex;flex-direction:column;gap:0}
+.alert{display:grid;grid-template-columns:4px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.alert:last-child{border-bottom:0}
+.alert .stripe{border-radius:2px}
+.alert b{display:block;font-size:13px}
+.alert span{font-size:12.5px;color:var(--ink2)}
+.alert .when{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+select,input[type=search]{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 10px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;flex-wrap:wrap}
+.seg button{font:inherit;font-size:12.5px;border:0;background:var(--surface);color:var(--ink2);padding:6px 11px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#0E141B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#0E141B}}
+.gantt{display:flex;flex-direction:column;gap:14px}
+.grow{display:grid;grid-template-columns:150px 1fr 70px;gap:12px;align-items:center}
+@media (max-width:640px){.grow{grid-template-columns:1fr 60px}.grow .gl{grid-column:1/-1}}
+.gl b{display:block;font-size:13px}.gl span{font-size:11.5px;color:var(--ink2)}
+.gtrack{display:flex;height:26px;border-radius:5px;overflow:hidden;background:var(--surface2);border:1px solid var(--line)}
+.gtrack div{height:100%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;color:#fff;overflow:hidden;white-space:nowrap;border-right:1px solid var(--surface)}
+.gtot{font-family:var(--display);font-weight:700;font-size:16px;text-align:right;font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--ink2);margin-top:12px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.heat{display:grid;grid-template-columns:28px repeat(5,1fr);grid-template-rows:repeat(5,52px) 24px;gap:3px;font-size:11px}
+.heat .c{border-radius:4px;display:flex;flex-wrap:wrap;gap:3px;align-content:flex-start;padding:4px}
+.heat .ax{display:flex;align-items:center;justify-content:center;color:var(--ink3);font-family:var(--mono)}
+.rid{font-family:var(--mono);font-size:10.5px;font-weight:600;background:var(--surface);color:var(--ink);border-radius:3px;padding:1px 4px;border:1px solid var(--line);cursor:pointer}
+.rid:hover{border-color:var(--accent)}
+tr.hl td{background:var(--accent-soft)}
+.sim-controls{display:flex;flex-direction:column;gap:14px}
+.slider{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center}
+.slider label{font-size:12.5px;color:var(--ink2)}
+.slider output{font-family:var(--mono);font-size:12.5px}
+.slider input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--ink2)}
+.check input{margin-top:3px;accent-color:var(--accent)}
+.outcome{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+@media (max-width:560px){.outcome{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.outcome > div{background:var(--surface2);border-radius:8px;padding:10px 12px}
+.outcome .v{font-family:var(--display);font-weight:750;font-size:22px;font-variant-numeric:tabular-nums}
+.outcome .n{font-size:11.5px;color:var(--ink2)}
+.costbar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface2);margin-top:8px;border:1px solid var(--line)}
+.costbar i{display:block;height:100%}
+.outcome > .total{background:var(--crit-soft)}
+.simgrid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(250px,1fr);gap:20px;margin-top:12px;align-items:start}
+@media (max-width:960px){.simgrid{grid-template-columns:minmax(0,1fr)}}
+.mapbox{position:relative;width:100%;aspect-ratio:1000/840;max-width:100%;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--sea)}
+.mapbox canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer}
+.mapbanner{position:absolute;left:10px;top:10px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none;max-width:calc(100% - 20px)}
+.mapbanner .pill{box-shadow:var(--shadow);border:1px solid var(--line)}
+.playbar{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.playbar input[type=range]{flex:1 1 160px;accent-color:var(--accent);min-width:0}
+.playbar output{font-size:12px;color:var(--ink2);min-width:92px}
+.pbtn{font:inherit;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:7px;padding:6px 12px;cursor:pointer;min-width:64px}
+.pbtn:hover{border-color:var(--accent)}
+.hud{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-top:10px}
+.hud > div{background:var(--surface2);border-radius:7px;padding:7px 10px;border-left:3px solid var(--line)}
+.hud > div.ok{border-left-color:var(--ok)} .hud > div.warn{border-left-color:var(--warn)} .hud > div.crit{border-left-color:var(--crit)}
+.hud .v{font-family:var(--display);font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;line-height:1.2}
+.hud .n{font-size:11px;color:var(--ink2)}
+.outcome.two{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0}
+
+.actions{margin:12px 0 0;padding-left:18px;font-size:13px;color:var(--ink2)}
+.actions li{margin-bottom:4px}
+.foundry-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.fcard{border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.fcard h3{margin:0;font-family:var(--display);font-stretch:88%;font-size:17px;font-weight:700}
+.fcard .loc{font-size:12px;color:var(--ink2)}
+.fcard dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:12.5px}
+.fcard dt{color:var(--ink3)} .fcard dd{margin:0}
+.fcard p{margin:0;font-size:12.5px;color:var(--ink2)}
+.share{display:flex;flex-direction:column;gap:6px}
+.share .row{display:grid;grid-template-columns:120px 1fr 48px;gap:10px;align-items:center;font-size:12.5px}
+.share .row .t{height:14px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.share .row .t i{display:block;height:100%;background:var(--accent)}
+.share .row.tsmc .t i{background:var(--wafer)}
+.detail{background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:13px;margin-top:10px}
+.detail h4{margin:0 0 4px;font-size:14px}
+.detail dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:6px 0 0}
+.detail dt{color:var(--ink3);font-size:12px}.detail dd{margin:0}
+.sources{font-size:12px;color:var(--ink2)}
+.sources ol{padding-left:18px;margin:6px 0 0;columns:2;column-gap:28px}
+@media (max-width:720px){.sources ol{columns:1}}
+.sources a{color:var(--accent)}
+.note{font-size:12px;color:var(--ink3);margin-top:8px}
+.node{cursor:pointer}
+.node:focus-visible rect{stroke:var(--accent);stroke-width:2.5}
+@keyframes pulse{0%{opacity:.7;r:7}100%{opacity:0;r:16}}
+.pulse{animation:pulse 1.8s ease-out infinite}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none;opacity:0}}
+/* ===== Silicon Shock skin ===== */
+html{background:var(--bg)}
+body{font-size:14.5px;background:
+  radial-gradient(900px 520px at 8% -6%,rgba(57,213,255,.13),transparent 60%),
+  radial-gradient(800px 520px at 100% 4%,rgba(168,132,255,.14),transparent 60%),
+  linear-gradient(var(--bg),var(--bg));background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:linear-gradient(rgba(120,150,220,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,220,.06) 1px,transparent 1px);
+  background-size:44px 44px;mask-image:linear-gradient(to bottom,#000 0,transparent 900px);-webkit-mask-image:linear-gradient(to bottom,#000 0,transparent 900px)}
+.shell{position:relative;z-index:1;gap:20px;padding-block:0 56px}
+::selection{background:rgba(57,213,255,.35)}
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin-inline:-20px;padding:12px 20px;background:rgba(6,8,15,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.06em;color:var(--ink);text-decoration:none}
+.logo .mk{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:conic-gradient(from 200deg,var(--accent),var(--wafer),var(--accent));color:#05070D;font-size:11px;font-weight:800;box-shadow:0 0 22px rgba(57,213,255,.35)}
+.logo small{display:block;font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.08em;color:var(--ink3)}
+.chip{background:rgba(255,255,255,.03);border-color:var(--line);color:var(--ink2);font-family:var(--mono);font-size:11px;letter-spacing:.02em}
+.chip.sample{background:var(--warn-soft);color:var(--warn)}
+@media (max-width:700px){.topbar .meta{display:none}}
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:36px;align-items:center;padding-block:52px 30px}
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr);padding-block:32px 10px}.hero-art{max-width:380px;margin-inline:auto;width:100%}}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--accent);border:1px solid rgba(57,213,255,.3);background:rgba(57,213,255,.06);padding:6px 12px;border-radius:999px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(52,227,154,.6);animation:live 1.8s infinite}
+@keyframes live{0%{box-shadow:0 0 0 0 rgba(52,227,154,.55)}100%{box-shadow:0 0 0 10px rgba(52,227,154,0)}}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,5.2vw,62px);line-height:1.02;letter-spacing:-.025em;margin:18px 0 16px;text-wrap:balance}
+.hero h1 .hl{background:linear-gradient(92deg,var(--accent),var(--wafer) 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);max-width:58ch;margin:0}
+.ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.cta{font:inherit;font-weight:700;font-size:14.5px;border:0;border-radius:12px;padding:13px 20px;cursor:pointer;background:linear-gradient(92deg,var(--accent),#7FE8FF);color:#03121A;box-shadow:0 8px 30px rgba(57,213,255,.28);transition:transform .15s,box-shadow .15s}
+.cta:hover{transform:translateY(-1px);box-shadow:0 10px 36px rgba(57,213,255,.4)}
+.cta.ghost{background:rgba(255,255,255,.04);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.cta.ghost:hover{border-color:var(--accent)}
+.hero-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:30px}
+@media (max-width:640px){.hero-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hero-stats div{border-top:1px solid var(--line);padding-top:10px}
+.hero-stats b{display:block;font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.hero-stats span{font-size:12px;color:var(--ink3)}
+.hero-art{position:relative;aspect-ratio:1/1;max-width:100%}
+.hero-art canvas{width:100%;height:100%;display:block}
+.wafer-cap{position:absolute;left:0;right:0;bottom:-4px;text-align:center;font-size:10.5px;letter-spacing:.14em;color:var(--ink3)}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:8px}
+.section-head h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;margin:0}
+.section-head p{margin:4px 0 0;color:var(--ink2);max-width:60ch}
+/* tabs as pill nav */
+nav.tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 57px);z-index:15;gap:6px;border:1px solid var(--line);border-radius:14px;padding:6px;background:rgba(10,14,25,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+nav.tabs button{border-radius:10px;border-bottom:0;padding:9px 16px;font-weight:600;color:var(--ink2);transition:background .15s,color .15s}
+nav.tabs button:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+nav.tabs button[aria-selected="true"]{color:#03121A;background:linear-gradient(92deg,var(--accent),#7FE8FF);border-bottom:0}
+/* panels */
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)) ,var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);padding:20px}
+.panel h2{font-family:var(--display);font-weight:600;font-size:16.5px;letter-spacing:-.01em}
+.eyebrow,th{font-family:var(--mono);letter-spacing:.12em}
+.kpi{border-left:0!important;position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--accent);opacity:.7}
+.kpi.ok::after{background:var(--ok)}.kpi.warn::after{background:var(--warn)}.kpi.crit::after{background:var(--crit);box-shadow:0 0 18px var(--crit)}
+.kpi .v,.outcome .v,.hud .v,.gtot{font-family:var(--display);letter-spacing:-.02em}
+.kpi .v{font-size:30px}
+.pill{font-family:var(--mono);font-size:11px;letter-spacing:.02em}
+th{background:rgba(255,255,255,.025)}
+tr:hover td{background:rgba(57,213,255,.035)}
+.seg{border-radius:10px;border-color:var(--line);background:var(--surface2)}
+.seg button{background:transparent;font-weight:600}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#03121A}
+.pbtn{background:var(--accent);color:#03121A;border-color:transparent;border-radius:9px}
+.outcome > div,.hud > div,.detail{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px}
+.outcome > .total{background:linear-gradient(135deg,rgba(255,79,109,.18),rgba(255,79,109,.05));border-color:rgba(255,79,109,.35)}
+.mapbox{border-radius:14px;box-shadow:0 0 0 1px rgba(57,213,255,.08),0 20px 60px rgba(0,0,0,.45)}
+.fcard{background:rgba(255,255,255,.025);border-radius:14px;transition:border-color .15s,transform .15s}
+.fcard:hover{border-color:rgba(57,213,255,.4);transform:translateY(-2px)}
+.gtrack{border-radius:8px}
+input[type=range]{accent-color:var(--accent)}
+select,input[type=search]{background:var(--surface2);border-radius:9px}
+.costbar{height:10px;border:0}
+.sources a{color:var(--accent)}
+.site-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px;color:var(--ink3);font-size:12.5px}
+.site-foot b{color:var(--ink);font-weight:600}
+@media (prefers-reduced-motion:reduce){.live-dot{animation:none}.cta,.fcard{transition:none}}
+
+</style>
+</head>
+<body>
+
+
+<div class="shell">
+  <header class="topbar">
+    <a class="logo" href="#tower"><span class="mk">J&amp;J</span><span>SILICON SHOCK<small>J&amp;J SEMICONDUCTORS · CONTROL TOWER</small></span></a>
+    <div class="meta">
+      <span class="chip sample"><span class="dot"></span>Sample operating data</span>
+      <span class="chip">Plant JJ01 · Co. code 1000</span>
+      <span class="chip" id="asof">As of 24 Sep 2026</span>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="kicker"><span class="live-dot"></span>CASE STUDY · SUPPLY CHAIN RISK</span>
+      <h1>What happens to your chips when <span class="hl">Taiwan goes dark?</span></h1>
+      <p class="lede">An SAP-style control tower for a fictional fabless chip company. Follow wafer lots from TSMC Taiwan through Penang and Singapore to Changi, then hit it with a quarantine, blockade or earthquake and watch the buffers burn down live.</p>
+      <div class="ctas"><button type="button" class="cta" data-go="risk">Run the simulator →</button><button type="button" class="cta ghost" data-go="tower">Explore the network</button></div>
+      <div class="hero-stats">
+        <div><b>72.5%</b><span>TSMC foundry share, Q2 2026</span></div>
+        <div><b>~20 wks</b><span>Wafer start to customer</span></div>
+        <div><b>6</b><span>Disruption scenarios</span></div>
+        <div><b>8</b><span>Alternative foundries rated</span></div>
+      </div>
+    </div>
+    <div class="hero-art"><canvas id="waferCv" role="img" aria-label="Animated wafer map with a probe sweeping across the dies"></canvas><div class="wafer-cap">WAFER MAP · N5 · LOT TSM-A7-2305</div></div>
+  </section>
+  <div class="section-head" id="app"><div><h2>The control tower</h2><p>Five modules, one network. Everything below is live, so click, drag and break things.</p></div></div>
+  <nav class="tabs" role="tablist" aria-label="Modules">
+    <button role="tab" id="t-tower" aria-selected="true" data-tab="tower">Control tower</button>
+    <button role="tab" id="t-lots" aria-selected="false" data-tab="lots">Lot tracking</button>
+    <button role="tab" id="t-lead" aria-selected="false" data-tab="lead">Lead times</button>
+    <button role="tab" id="t-risk" aria-selected="false" data-tab="risk">Risk &amp; scenarios</button>
+    <button role="tab" id="t-alt" aria-selected="false" data-tab="alt">Alternative sources</button>
+  </nav>
+
+  <!-- CONTROL TOWER -->
+  <section data-view="tower" class="grid" style="gap:16px">
+    <div class="grid g-kpi" id="kpis"></div>
+    <div class="grid g-2">
+      <div class="panel">
+        <h2>End-to-end network</h2>
+        <p class="sub">Every node from raw wafer to customer. Select a node for site, owner, lead time and exposure. Edge labels show transport mode and door-to-door days.</p>
+        <div class="scroll-x"><svg id="net" viewBox="0 0 1000 440" style="min-width:760px;width:100%;height:auto" role="img" aria-label="Supply network diagram"></svg></div>
+        <div class="detail" id="nodeDetail"></div>
+      </div>
+      <div class="panel">
+        <h2>Exceptions &amp; watch items</h2>
+        <p class="sub">Operational exceptions (sample) and external signals worth monitoring (sourced).</p>
+        <div class="alerts" id="alerts"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOTS -->
+  <section data-view="lots" hidden>
+    <div class="panel">
+      <h2>Lot &amp; shipment tracking</h2>
+      <p class="sub">Each lot is followed from wafer start at TSMC through probe, assembly, test and the Changi DC. Progress is the share of standard cycle time completed.</p>
+      <div class="toolbar">
+        <input type="search" id="lotSearch" placeholder="Search lot, part, location" aria-label="Search lots">
+        <select id="lotStage" aria-label="Filter by stage">
+          <option value="">All stages</option>
+        </select>
+        <select id="lotStatus" aria-label="Filter by status">
+          <option value="">All statuses</option><option>On track</option><option>At risk</option><option>Delayed</option><option>On hold</option>
+        </select>
+        <span class="note" id="lotCount" style="margin:0"></span>
+      </div>
+      <div class="scroll-x">
+        <table>
+          <thead><tr><th>Lot</th><th>Part</th><th>Stage</th><th>Location</th><th class="num">Qty</th><th>Progress</th><th>ETA Changi</th><th>Status</th></tr></thead>
+          <tbody id="lotBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEAD TIMES -->
+  <section data-view="lead" class="grid" hidden>
+    <div class="panel">
+      <h2>Cycle time by product, stage by stage</h2>
+      <p class="sub">Standard manufacturing cycle once a wafer is started. Add the TSMC order lead time on top when placing new wafer starts (see right).</p>
+      <div class="gantt" id="gantt"></div>
+      <div class="legend" id="ganttLegend"></div>
+    </div>
+    <div class="grid g-2e">
+      <div class="panel">
+        <h2>Order lead time vs. cycle time</h2>
+        <p class="sub">Cycle time is how long a wafer takes to make. Order lead time is how far ahead TSMC capacity must be booked. For AI-crowded nodes, booking is the long pole.</p>
+        <div class="scroll-x"><table>
+          <thead><tr><th>Item</th><th>Typical lead time</th><th>Planning note</th></tr></thead>
+          <tbody>
+            <tr><td>TSMC N5/N4 wafer starts</td><td class="mono">22–32 wks</td><td>Reported industry range; AI demand keeps 5/4nm fully booked <sup>[5][6]</sup></td></tr>
+            <tr><td>TSMC N3 new programs</td><td class="mono">104+ wks</td><td>New kickoffs reported suspended <sup>[5]</sup></td></tr>
+            <tr><td>TSMC 7nm</td><td class="mono">8–16 wks</td><td>Easing <sup>[5]</sup></td></tr>
+            <tr><td>Advanced packaging (CoWoS-class)</td><td class="mono">50+ wks</td><td>Only relevant if JJ-A7 moves to 2.5D <sup>[5]</sup></td></tr>
+            <tr><td>ABF substrates (flip-chip BGA)</td><td class="mono">16–26 wks</td><td>Substrate shortages flagged for 2026 <sup>[11]</sup></td></tr>
+            <tr><td>Test sockets / load boards</td><td class="mono">8–12 wks</td><td>Sample planning value</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="panel">
+        <h2>Planning parameters (SAP MRP view)</h2>
+        <p class="sub">Sample master data you would set per material in an ERP. Replace with J&amp;J actuals.</p>
+        <div class="scroll-x"><table>
+          <thead><tr><th>Material</th><th class="num">Planned deliv. time</th><th class="num">Safety stock</th><th>Lot size</th><th>MRP type</th></tr></thead>
+          <tbody id="mrpBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RISK -->
+  <section data-view="risk" class="grid" hidden>
+    <div class="panel">
+      <h2>Disruption scenario simulator</h2>
+      <p class="sub">Pick an event, then adjust how long it lasts, how much Taiwan output still ships, and your buffers. The map replays the event week by week: planes carry wafer lots and finished chips, tankers bring LNG to Taiwan, and each site shows its inventory as the buffers run down.</p>
+      <div class="seg" id="scenBtns" role="group" aria-label="Scenario"></div>
+      <p class="note" id="scenDesc"></p>
+      <div class="simgrid">
+        <div class="mapcol">
+          <div class="mapbox" id="mapBox">
+            <canvas id="mapCv" role="img" aria-label="Animated map of J&amp;J shipments between Taiwan, Penang, Singapore and customers"></canvas>
+            <div class="mapbanner" id="mapBanner"></div>
+          </div>
+          <div class="playbar">
+            <button type="button" id="mPlay" class="pbtn" aria-label="Pause">Pause</button>
+            <input type="range" id="mWeek" min="-2" max="20" step="0.05" value="-2" aria-label="Simulation week">
+            <output id="oWeek" class="mono"></output>
+            <div class="seg" id="mSpeed" role="group" aria-label="Playback speed"><button type="button" data-s="0.5" aria-pressed="false">½×</button><button type="button" data-s="1" aria-pressed="true">1×</button><button type="button" data-s="2" aria-pressed="false">2×</button></div>
+          </div>
+          <div class="hud" id="mapHud"></div>
+          <div class="legend" style="margin-top:8px">
+            <span><i style="background:var(--wafer)"></i>Wafer lots from Taiwan</span>
+            <span><i style="background:var(--ok)"></i>Second-source wafers</span>
+            <span><i style="background:var(--accent)"></i>Finished chips to customers</span>
+            <span><i style="background:var(--ink2)"></i>Trucks Penang → Singapore</span>
+            <span><i style="background:var(--warn)"></i>LNG tankers to Taiwan</span>
+          </div>
+          <p class="note" id="mapInfo">Select a site on the map for details. Each plane is one shipment; time is compressed so a week plays in about two seconds.</p>
+        </div>
+        <div class="sim-controls">
+          <div class="slider"><label for="sDur">Disruption length (weeks)</label><output id="oDur"></output><input type="range" id="sDur" min="0" max="52" step="1" value="12"></div>
+          <div class="slider"><label for="sOut">Taiwan output that still ships during the event</label><output id="oOut"></output><input type="range" id="sOut" min="0" max="100" step="5" value="40"></div>
+          <div class="slider"><label for="sDie">Die bank at Penang (weeks of demand)</label><output id="oDie"></output><input type="range" id="sDie" min="0" max="20" step="1" value="6"></div>
+          <div class="slider"><label for="sFg">Finished goods at Changi (weeks)</label><output id="oFg"></output><input type="range" id="sFg" min="0" max="10" step="1" value="3"></div>
+          <div class="slider"><label for="sRev">Weekly revenue shipped ($M)</label><output id="oRev"></output><input type="range" id="sRev" min="1" max="20" step="0.5" value="4.5"></div>
+          <div class="eyebrow" style="margin-top:4px">Cost assumptions</div>
+          <div class="slider"><label for="sCarry">Inventory carrying cost (% of inventory value per year)</label><output id="oCarry"></output><input type="range" id="sCarry" min="10" max="40" step="1" value="25"></div>
+          <div class="slider"><label for="sIdle">Back-end fixed cost when idle ($M per week)</label><output id="oIdle"></output><input type="range" id="sIdle" min="0.1" max="3" step="0.1" value="0.8"></div>
+          <label class="check"><input type="checkbox" id="sAlt"> Pre-qualified second source (TSMC Arizona N4 / Kumamoto) ramps to 30% of demand from week 6</label>
+        </div>
+      </div>
+      <div class="grid g-2e" style="margin-top:18px">
+        <div>
+          <h3 class="eyebrow" style="margin:0 0 6px">Inventory cover outside Taiwan</h3>
+          <svg id="deplete" viewBox="0 0 420 220" style="width:100%;height:auto" role="img" aria-label="Inventory cover over time"></svg>
+        </div>
+        <div>
+          <h3 class="eyebrow" style="margin:0 0 6px">Supply impact</h3>
+          <div class="outcome two" id="outcome"></div>
+        </div>
+      </div>
+      <h3 class="eyebrow" style="margin:18px 0 0">Cost of the event</h3>
+      <div class="costbar" id="costbar" role="img"></div>
+      <div class="legend" style="margin-top:6px"><span><i style="background:var(--accent)"></i>Holding</span><span><i style="background:var(--warn)"></i>Idle back end</span><span><i style="background:var(--crit)"></i>Lost margin</span></div>
+      <div class="outcome" id="costs"></div>
+      <p class="note">Inventory is valued at cost, assumed to be 50% of revenue. Idle cost is the share of Penang and Singapore fixed cost (labour, reserved OSAT capacity, depreciation) that has no wafers to work on.</p>
+      <ul class="actions" id="actions"></ul>
+    </div>
+    <div class="grid g-2">
+      <div class="panel">
+        <h2>Risk register</h2>
+        <p class="sub">Threats across the chain, with the early-warning signal to watch and the mitigation that owns it.</p>
+        <div class="scroll-x"><table>
+          <thead><tr><th>ID</th><th>Risk</th><th>Node</th><th class="num">L</th><th class="num">I</th><th>Score</th><th>Early warning</th><th>Mitigation</th></tr></thead>
+          <tbody id="riskBody"></tbody>
+        </table></div>
+      </div>
+      <div class="panel">
+        <h2>Risk heat map</h2>
+        <p class="sub">Likelihood (next 12 months) against impact on J&amp;J supply. Select an ID to find it in the register.</p>
+        <div class="heat" id="heat"></div>
+        <p class="note">Scores are judgement-based starting points for your team to review, not forecasts.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALT -->
+  <section data-view="alt" class="grid" hidden>
+    <div class="grid g-2">
+      <div class="panel">
+        <h2>Who can make volume like TSMC?</h2>
+        <p class="sub">Nobody fully can. TSMC took about 72% of global foundry revenue in Q2 2026, more than ten times the next player <sup>[3]</sup>. The practical plan is to split by node: keep leading-edge parts with TSMC but add a non-Taiwan TSMC fab, and dual-source mature parts outside Taiwan.</p>
+        <div class="share" id="share"></div>
+        <p class="note">Foundry revenue share, Q1 2026 (TrendForce). TSMC figure is Q2 2026. <sup>[3][4]</sup></p>
+      </div>
+      <div class="panel">
+        <h2>Recommended sourcing split</h2>
+        <p class="sub">Sample strategy for J&amp;J's three product families.</p>
+        <div class="scroll-x"><table>
+          <thead><tr><th>Part</th><th>Primary</th><th>Second source</th><th>Time to qualify</th></tr></thead>
+          <tbody>
+            <tr><td><b>JJ-A7</b><br><span class="note">N5 compute SoC</span></td><td>TSMC Tainan</td><td>TSMC Arizona (N4). Same PDK family, lowest port effort.</td><td class="mono">6–9 mo</td></tr>
+            <tr><td><b>JJ-P3</b><br><span class="note">16nm PMIC</span></td><td>TSMC Taichung</td><td>TSMC Kumamoto (JASM 12/16nm) or GlobalFoundries 12LP+</td><td class="mono">6–12 mo</td></tr>
+            <tr><td><b>JJ-M2</b><br><span class="note">28nm MCU</span></td><td>TSMC Taichung</td><td>UMC Singapore (Fab 12i) or GlobalFoundries Dresden / Singapore</td><td class="mono">9–12 mo</td></tr>
+          </tbody>
+        </table></div>
+        <p class="note">Moving M2 to Singapore also puts front end next to J&amp;J's back end, cutting a flight out of the chain.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Alternative foundries</h2>
+      <p class="sub">Filter by the node you need. "Fit" weighs capacity, process maturity, porting effort and geopolitical exposure for a US-linked fabless company.</p>
+      <div class="toolbar">
+        <div class="seg" id="nodeBtns" role="group" aria-label="Node filter"></div>
+      </div>
+      <div class="foundry-grid" id="foundries"></div>
+    </div>
+    <div class="panel">
+      <h2>Back-end alternates (OSAT)</h2>
+      <p class="sub">Assembly and test are far less concentrated than wafer fab, so second sources here are quicker to stand up.</p>
+      <div class="scroll-x"><table>
+        <thead><tr><th>OSAT</th><th>Relevant sites</th><th>Why consider</th></tr></thead>
+        <tbody>
+          <tr><td><b>ASE</b></td><td>Penang (MY), Kaohsiung (TW), new sites in US, Japan, Germany</td><td>Largest OSAT; breaking ground on six new factories in 2026 <sup>[9]</sup></td></tr>
+          <tr><td><b>Amkor</b></td><td>Penang (MY), Bac Ninh (VN), Philippines, Arizona (US)</td><td>Non-China footprint, US site for domestic packaging</td></tr>
+          <tr><td><b>UTAC</b></td><td>Singapore, Thailand, Indonesia, Malaysia</td><td>Positioned for non-China capacity; Singapore test next to Changi <sup>[10]</sup></td></tr>
+          <tr><td><b>Intel Foundry packaging</b></td><td>Penang / Kulim (MY)</td><td>~$7B advanced packaging complex expected to launch H2 2026 <sup>[9]</sup></td></tr>
+          <tr><td><b>Inari Amertron</b></td><td>Penang (MY)</td><td>Local player in the Malaysia Advanced Packaging Consortium <sup>[8]</sup></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <div class="panel sources">
+    <span class="eyebrow">Sources</span>
+    <ol>
+      <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0308596125000485" target="_blank" rel="noopener">Taiwan's semiconductor industry and geopolitical challenges (ScienceDirect, 2025)</a></li>
+      <li><a href="https://www.heygotrade.com/en/news/tsmc-record-q1-chip-supply-chain-war-risk-20260414/" target="_blank" rel="noopener">TSMC record Q1, chip supply faces war risk (Apr 2026)</a></li>
+      <li><a href="https://evertiq.com/design/2026-09-10-smic-narrows-gap-with-samsung-as-global-foundry-revenue-hits-record-5349-billion" target="_blank" rel="noopener">Q2 2026 foundry revenue, TrendForce (Evertiq, Sep 2026)</a></li>
+      <li><a href="https://marklapedus.substack.com/p/tsmc-gains-foundry-share-in-q1-26" target="_blank" rel="noopener">TSMC gains foundry share in Q1 '26 (Semiecosystem)</a></li>
+      <li><a href="https://siliconanalysts.com/tools/allocation" target="_blank" rel="noopener">Foundry allocation &amp; lead time tracker (Silicon Analysts)</a></li>
+      <li><a href="https://semiwiki.com/semiconductor-manufacturers/tsmc/367081-global-2nm-supply-crunch-tsmc-leads-as-intel-18a-samsung-and-rapidus-race-to-compete/" target="_blank" rel="noopener">Global 2nm supply crunch (SemiWiki, Mar 2026)</a></li>
+      <li><a href="https://supplyics.com/insights/supply-chain/chips-act-semiconductor-reshoring-mid-2026-progress/" target="_blank" rel="noopener">CHIPS Act &amp; reshoring mid-2026 progress (SupplyICs)</a></li>
+      <li><a href="https://theedgemalaysia.com/node/797262" target="_blank" rel="noopener">Malaysia advanced packaging push (The Edge Malaysia)</a></li>
+      <li><a href="https://www.hilomax.com/news/cutting-edge-insights/advanced-packaging-ai-strategic-high-ground/" target="_blank" rel="noopener">2026 global OSAT capacity battle (Hilomax)</a></li>
+      <li><a href="https://www.marketresearchreports.com/blog/top-10-osat-companies-world-updated-2026" target="_blank" rel="noopener">Top 10 OSAT companies 2026</a></li>
+      <li><a href="https://markwideresearch.com/outsourced-semiconductor-assembly-and-test-services-osat-market" target="_blank" rel="noopener">OSAT market &amp; substrate bottlenecks (MarkWide)</a></li>
+      <li><a href="https://www.whitehouse.gov/presidential-actions/2026/01/adjusting-imports-of-semiconductors-semiconductor-manufacturing-equipment-and-their-derivative-products-into-the-united-states/" target="_blank" rel="noopener">Section 232 semiconductor proclamation (White House, Jan 2026)</a></li>
+      <li><a href="https://www.tarifflens.ai/blog/section-232-semiconductor-tariff-july-2026-phase-2-guide" target="_blank" rel="noopener">Section 232 Phase 2 outlook (TariffLens)</a></li>
+      <li><a href="https://whitehsu.blog/2026/03/12/taiwan-semiconductor-supply-chain-energy-risk/" target="_blank" rel="noopener">Taiwan's hidden LNG dependence (Mar 2026)</a></li>
+      <li><a href="https://carraglobe.com/semiconductor-supply-chain-disruption-2026/" target="_blank" rel="noopener">Helium crisis and chip fabs (Carra Globe, Mar 2026)</a></li>
+      <li><a href="https://www.freightamigo.com/en/blog/electronics-logistics/semiconductor-supply-chain-2026-from-shortages-to-resillience/" target="_blank" rel="noopener">Semiconductor logistics costs 2026 (FreightAmigo)</a></li>
+      <li><a href="https://www.everstream.ai/risk-centers/3-china-taiwan-risk-scenarios-for-semiconductor-supplies/" target="_blank" rel="noopener">3 China–Taiwan risk scenarios (Everstream)</a></li>
+      <li><a href="https://averroes.ai/blog/top-10-semiconductor-foundries" target="_blank" rel="noopener">Top 10 semiconductor foundries 2026 (Averroes)</a></li>
+    </ol>
+    <p class="note">Lots, quantities, revenue, inventory and planning parameters are illustrative sample data for J&amp;J Semiconductors. Market, lead-time and policy figures come from the sources above and change quickly; verify before committing.</p>
+  </div>
+  <footer class="site-foot"><span>Built by <b>Jasper Hartman</b> · Supply Chain Management + ERP · University of Arkansas</span><span>J&amp;J Semiconductors is fictional. Market data from public 2026 sources.</span></footer>
+</div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ---------- tabs ---------- */
+function show(tab){
+  $$('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
+  $$('[data-view]').forEach(v=>v.hidden=v.dataset.view!==tab);
+  try{localStorage.setItem('jj-tab',tab)}catch(e){}
+  if(tab==='risk') runSim();
+}
+$$('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{show(b.dataset.tab);try{history.replaceState(null,'','#'+b.dataset.tab)}catch(e){}}));
+
+/* ---------- KPIs ---------- */
+const kpis=[
+  {l:'End-to-end cycle (JJ-A7)',v:'19.9',u:'wks',n:'Wafer start to customer dock',c:''},
+  {l:'Lots in pipeline',v:'12',u:'',n:'3 at risk, 1 on hold',c:'warn'},
+  {l:'On-time to promise',v:'91',u:'%',n:'Trailing 13 weeks · target 95%',c:'warn'},
+  {l:'Supply cover outside Taiwan',v:'13.8',u:'wks',n:'Die bank + WIP + finished goods',c:'ok'},
+  {l:'Wafer supply from Taiwan',v:'100',u:'%',n:'Single-country front end',c:'crit'},
+  {l:'Critical risks open',v:'3',u:'',n:'Score 15 or higher',c:'crit'}
+];
+$('#kpis').innerHTML=kpis.map(k=>`<div class="panel kpi ${k.c}"><span class="eyebrow">${k.l}</span><span class="v">${k.v}<small>${k.u}</small></span><span class="n">${k.n}</span></div>`).join('');
+
+/* ---------- network ---------- */
+const nodes=[
+  {id:'si',x:20,y:40,t:'Silicon wafers',s:'Shin-Etsu, SUMCO (JP) · GlobalWafers (TW)',st:'ok',col:0,
+   d:{Owner:'Tier-2 via TSMC',Lead:'Consigned by TSMC; 8–12 wks',Exposure:'About a third of Taiwan\'s wafer imports come from China, a pressure lever [17]'}},
+  {id:'chem',x:20,y:140,t:'Gases & photoresist',s:'Neon, helium, resists (JP/US/KR)',st:'warn',col:0,
+   d:{Owner:'Tier-2 via TSMC',Lead:'4–10 wks',Exposure:'Qatar helium disruption hit Korean fabs hardest in 2026; Taiwan less exposed [15]'}},
+  {id:'abf',x:20,y:240,t:'ABF substrates',s:'Ibiden (JP) · Unimicron (TW)',st:'warn',col:0,
+   d:{Owner:'J&J buyer → OSAT',Lead:'16–26 wks',Exposure:'Substrate film shortages constrain flip-chip [11]'}},
+  {id:'lf',x:20,y:340,t:'Lead frames & mold',s:'MY / SG / JP suppliers',st:'ok',col:0,
+   d:{Owner:'OSAT managed',Lead:'4–6 wks',Exposure:'Multiple regional suppliers'}},
+  {id:'fab1',x:230,y:70,t:'TSMC Fab 18 · Tainan',s:'N5 · JJ-A7',st:'crit',col:1,tw:1,
+   d:{Owner:'TSMC (foundry)',Lead:'13 wk cycle; 22–32 wk booking',Exposure:'Taiwan Strait, earthquakes, LNG-dependent grid (97% energy imported) [2][14]'}},
+  {id:'fab2',x:230,y:180,t:'TSMC Fab 15 · Taichung',s:'16nm / 28nm · JJ-P3, JJ-M2',st:'crit',col:1,tw:1,
+   d:{Owner:'TSMC (foundry)',Lead:'9–10 wk cycle',Exposure:'Same country risk as Fab 18'}},
+  {id:'probe',x:230,y:290,t:'Wafer probe · Hsinchu',s:'CP test, inking, wafer map',st:'warn',col:1,tw:1,
+   d:{Owner:'TSMC / test house',Lead:'1 wk',Exposure:'Last Taiwan step before export'}},
+  {id:'pen',x:460,y:110,t:'Penang ATP · Bayan Lepas',s:'Die bank, flip-chip BGA, QFN, LQFP',st:'ok',col:2,
+   d:{Owner:'OSAT partner',Lead:'1.5–2.5 wks',Exposure:'Power, water, labour; US transshipment scrutiny',Buffer:'6 wks die bank'}},
+  {id:'sgt',x:460,y:240,t:'Singapore Test · Ang Mo Kio',s:'Final test, burn-in, tape & reel',st:'ok',col:2,
+   d:{Owner:'OSAT partner',Lead:'1.5 wks',Exposure:'Tester capacity; low geo risk'}},
+  {id:'dc',x:680,y:175,t:'Changi DC · ALPS',s:'Bonded hub, pick/pack, export',st:'warn',col:3,
+   d:{Owner:'3PL',Lead:'2–3 days',Exposure:'Single hub for all outbound; air rates and cargo insurance at highs [16]',Buffer:'3 wks finished goods'}},
+  {id:'am',x:880,y:60,t:'Americas',s:'LAX · DFW · SJC',st:'warn',col:4,
+   d:{Lead:'4–5 days air',Exposure:'Section 232 duties (Phase 1 in force, Phase 2 under review) [12][13]'}},
+  {id:'eu',x:880,y:175,t:'Europe',s:'FRA · AMS',st:'ok',col:4,d:{Lead:'4–6 days air',Exposure:'Low'}},
+  {id:'ap',x:880,y:290,t:'APAC',s:'PVG · NRT · ICN',st:'warn',col:4,d:{Lead:'2–3 days air',Exposure:'US export-control screening for China-bound parts'}}
+];
+const edges=[
+  ['si','fab1',''],['chem','fab1',''],['si','fab2',''],['chem','fab2',''],
+  ['fab1','probe','truck · 1d'],['fab2','probe','truck · 1d'],
+  ['probe','pen','air TPE→PEN · 3d'],['abf','pen','air · 3–5d'],['lf','pen','truck'],
+  ['pen','sgt','truck · 2d'],['sgt','dc','truck · 1d'],
+  ['dc','am','air · 4–5d'],['dc','eu','air · 4–6d'],['dc','ap','air · 2–3d']
+];
+const NW=170,NH=62;
+function drawNet(){
+  const svg=$('#net'), N={}; nodes.forEach(n=>N[n.id]=n);
+  const col={ok:css('--ok'),warn:css('--warn'),crit:css('--crit')};
+  let h='';
+  // region bands
+  const bands=[[10,'TIER-2 INPUTS'],[220,'FRONT END · TAIWAN'],[450,'BACK END · MY / SG'],[670,'DISTRIBUTION · SG'],[870,'CUSTOMERS']];
+  bands.forEach(([x,l],i)=>{h+=`<rect x="${x}" y="0" width="${i==4?120:190}" height="440" rx="8" fill="${i==1?css('--crit-soft'):css('--surface2')}" opacity="${i==1?.55:.7}"/><text x="${x+10}" y="424" font-size="10.5" letter-spacing="1" fill="${css('--ink3')}" font-weight="600">${l}</text>`});
+  edges.forEach(([a,b,l])=>{
+    const A=N[a],B=N[b];const w=a.startsWith('fab')&&b==='probe'?0:0;
+    const bw=B.col==4?110:NW;
+    const x1=A.x+(A.col==4?110:NW),y1=A.y+NH/2,x2=B.x,y2=B.y+NH/2;
+    let d;
+    if(a.startsWith('fab')&&b==='probe'){ // vertical-ish within column
+      const xs=A.x+NW-14; d=`M${xs},${A.y+NH} C${xs},${A.y+NH+20} ${xs},${B.y-20} ${xs},${B.y}`;
+    } else if(a==='pen'&&b==='sgt'){const xs=A.x+NW/2;d=`M${xs},${A.y+NH} L${xs},${B.y}`}
+    else {const mx=(x1+x2)/2; d=`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;}
+    const hot=(a==='probe'&&b==='pen');
+    h+=`<path d="${d}" fill="none" stroke="${hot?css('--crit'):css('--ink3')}" stroke-width="${hot?2.2:1.3}" stroke-dasharray="${hot?'6 4':''}" opacity="${hot?.9:.55}"/>`;
+    if(l){let lx,ly;
+      if(a.startsWith('fab')&&b==='probe'){lx=A.x+NW-20;ly=(A.y+NH+B.y)/2+4; if(a==='fab1') return; h+=`<text x="${lx}" y="${ly}" font-size="10" text-anchor="end" fill="${css('--ink2')}">${l}</text>`;return}
+      if(a==='pen'&&b==='sgt'){lx=A.x+NW/2+6;ly=(A.y+NH+B.y)/2+4;h+=`<text x="${lx}" y="${ly}" font-size="10" fill="${css('--ink2')}">${l}</text>`;return}
+      lx=(x1+x2)/2;ly=(y1+y2)/2-5;
+      h+=`<text x="${lx}" y="${ly}" font-size="10" text-anchor="middle" fill="${hot?css('--crit'):css('--ink2')}" font-weight="${hot?600:400}" paint-order="stroke" stroke="${css('--surface')}" stroke-width="3">${l}</text>`;}
+  });
+  nodes.forEach(n=>{
+    const w=n.col==4?110:NW;
+    h+=`<g class="node" tabindex="0" role="button" aria-label="${n.t}" data-id="${n.id}">
+      <rect x="${n.x}" y="${n.y}" width="${w}" height="${NH}" rx="7" fill="${css('--surface')}" stroke="${css('--line')}" stroke-width="1.2"/>
+      <rect x="${n.x}" y="${n.y}" width="4" height="${NH}" rx="2" fill="${col[n.st]}"/>
+      ${n.st==='crit'?`<circle class="pulse" cx="${n.x+w-12}" cy="${n.y+12}" r="7" fill="${col.crit}"/>`:''}
+      <circle cx="${n.x+w-12}" cy="${n.y+12}" r="4.5" fill="${col[n.st]}"/>
+      <text x="${n.x+12}" y="${n.y+24}" font-size="12.5" font-weight="600" fill="${css('--ink')}">${n.t.length>(n.col==4?14:24)?n.t.slice(0,n.col==4?14:24)+'…':n.t}</text>
+      <text x="${n.x+12}" y="${n.y+42}" font-size="10.5" fill="${css('--ink2')}">${n.s.length>(n.col==4?16:28)?n.s.slice(0,n.col==4?16:28)+'…':n.s}</text>
+    </g>`;
+  });
+  svg.innerHTML=h;
+  svg.querySelectorAll('.node').forEach(g=>{
+    const f=()=>nodeDetail(g.dataset.id);
+    g.addEventListener('click',f);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f()}});
+  });
+}
+const stLabel={ok:['ok','Normal'],warn:['warn','Watch'],crit:['crit','Critical exposure']};
+function nodeDetail(id){
+  const n=nodes.find(x=>x.id===id);const [c,l]=stLabel[n.st];
+  $('#nodeDetail').innerHTML=`<h4>${n.t} <span class="pill ${c}">${l}</span></h4><div style="color:var(--ink2);font-size:12.5px">${n.s}</div><dl>${Object.entries(n.d).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`;
+}
+
+/* ---------- alerts ---------- */
+const alerts=[
+  {s:'crit',t:'Lot TSM-A7-2291 held at Penang incoming QC',d:'Wafer map mismatch on 2 of 25 wafers. Re-probe requested from Hsinchu; +4 days to ETA.',w:'Sample · 23 Sep'},
+  {s:'warn',t:'ABF substrate allocation cut 15% for Q4',d:'Affects JJ-A7 flip-chip. Pull forward Q1 orders or approve alternate substrate vendor.',w:'Sample · 22 Sep'},
+  {s:'warn',t:'Section 232 Phase 2 under review',d:'Phase 1 (25% on a narrow set of advanced AI chips) has applied since 15 Jan 2026; broader coverage was flagged for a later phase. Confirm HTS classification and origin (US origin rules for ICs generally follow the wafer-fab country).',w:'External [12][13]'},
+  {s:'warn',t:'TSMC 5/4nm fully booked by AI demand',d:'Book 2027 JJ-A7 wafer starts now; quoted lead times run 22–32 weeks.',w:'External [3][5]'},
+  {s:'info',t:'Intel Penang advanced packaging ramp',d:'Large new back-end capacity expected in H2 2026, a possible second back-end source near the current site.',w:'External [9]'},
+  {s:'ok',t:'Changi outbound on schedule',d:'All 9 export shipments this week departed within SLA.',w:'Sample · 24 Sep'}
+];
+const acol={crit:'--crit',warn:'--warn',info:'--accent',ok:'--ok'};
+$('#alerts').innerHTML=alerts.map(a=>`<div class="alert"><div class="stripe" style="background:var(${acol[a.s]})"></div><div><b>${a.t}</b><span>${a.d}</span><div class="when">${a.w}</div></div></div>`).join('');
+
+/* ---------- lots ---------- */
+const stagesOrder=['Wafer fab','Wafer probe','In transit TW→MY','Assembly','In transit MY→SG','Final test','Changi DC','Shipped'];
+const lots=[
+  ['TSM-A7-2305','JJ-A7','Wafer fab','TSMC Fab 18, Tainan','25 wf',28,'2026-12-18','On track'],
+  ['TSM-A7-2298','JJ-A7','Wafer fab','TSMC Fab 18, Tainan','25 wf',61,'2026-11-27','On track'],
+  ['TSM-P3-1177','JJ-P3','Wafer fab','TSMC Fab 15, Taichung','25 wf',74,'2026-11-06','At risk'],
+  ['TSM-M2-0842','JJ-M2','Wafer probe','Hsinchu probe','25 wf',84,'2026-10-30','On track'],
+  ['TSM-A7-2291','JJ-A7','Assembly','Penang ATP','11,400 u',86,'2026-10-23','On hold'],
+  ['TSM-P3-1169','JJ-P3','In transit TW→MY','TPE → PEN, CI-0731','25 wf',83,'2026-10-21','On track'],
+  ['TSM-A7-2284','JJ-A7','Assembly','Penang ATP','12,050 u',89,'2026-10-16','At risk'],
+  ['TSM-M2-0836','JJ-M2','In transit MY→SG','North–South Expressway','48,200 u',93,'2026-10-02','On track'],
+  ['TSM-P3-1160','JJ-P3','Final test','Singapore Test, AMK','31,700 u',95,'2026-10-01','Delayed'],
+  ['TSM-A7-2277','JJ-A7','Final test','Singapore Test, AMK','11,900 u',96,'2026-09-29','On track'],
+  ['TSM-M2-0829','JJ-M2','Changi DC','ALPS bonded, bay 4','47,600 u',99,'2026-09-25','On track'],
+  ['TSM-P3-1152','JJ-P3','Shipped','SQ 7384 → LAX','30,900 u',100,'Delivered','On track']
+];
+const stc={'On track':'ok','At risk':'warn','Delayed':'crit','On hold':'crit'};
+$('#lotStage').innerHTML+=stagesOrder.map(s=>`<option>${s}</option>`).join('');
+function fmtDate(s){if(!/\d/.test(s))return s;const d=new Date(s+'T00:00:00');return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}
+function renderLots(){
+  const q=$('#lotSearch').value.toLowerCase(),st=$('#lotStage').value,ss=$('#lotStatus').value;
+  const rows=lots.filter(l=>(!q||l.join(' ').toLowerCase().includes(q))&&(!st||l[2]===st)&&(!ss||l[7]===ss));
+  $('#lotBody').innerHTML=rows.map(l=>`<tr><td class="mono">${l[0]}</td><td>${l[1]}</td><td>${l[2]}</td><td>${l[3]}</td><td class="num mono">${l[4]}</td><td><div class="bar" title="${l[5]}%"><i style="width:${l[5]}%"></i></div><span class="note mono" style="margin:0">${l[5]}%</span></td><td class="mono">${fmtDate(l[6])}</td><td><span class="pill ${stc[l[7]]}">${l[7]}</span></td></tr>`).join('')||`<tr><td colspan="8" class="note">No lots match these filters.</td></tr>`;
+  $('#lotCount').textContent=`${rows.length} of ${lots.length} lots`;
+}
+['#lotSearch','#lotStage','#lotStatus'].forEach(s=>$(s).addEventListener('input',renderLots));
+
+/* ---------- lead time gantt ---------- */
+const stageDefs=[
+  {k:'fab',n:'Wafer fab',c:'--wafer'},{k:'probe',n:'Probe',c:'--accent'},{k:'x1',n:'Air TW→MY',c:'--ink3'},
+  {k:'asm',n:'Assembly',c:'--ok'},{k:'x2',n:'Truck MY→SG',c:'--ink3'},{k:'test',n:'Test & burn-in',c:'--warn'},{k:'dc',n:'Changi DC',c:'--ink2'},{k:'out',n:'Air to customer',c:'--ink3'}
+];
+const products=[
+  {p:'JJ-A7',d:'N5 compute SoC · FCBGA',w:{fab:13,probe:1,x1:.5,asm:2.5,x2:.3,test:1.5,dc:.4,out:.7}},
+  {p:'JJ-P3',d:'16nm PMIC · QFN',w:{fab:10,probe:1,x1:.5,asm:1.5,x2:.3,test:1.2,dc:.4,out:.7}},
+  {p:'JJ-M2',d:'28nm MCU · LQFP',w:{fab:9,probe:.8,x1:.5,asm:1.5,x2:.3,test:1,dc:.4,out:.7}}
+];
+function renderGantt(){
+  const max=Math.max(...products.map(p=>Object.values(p.w).reduce((a,b)=>a+b,0)));
+  $('#gantt').innerHTML=products.map(p=>{
+    const tot=Object.values(p.w).reduce((a,b)=>a+b,0);
+    const segs=stageDefs.map(s=>{const v=p.w[s.k];return `<div style="width:${v/max*100}%;background:var(${s.c})" title="${s.n}: ${v} wks">${v>=1.2?v+'w':''}</div>`}).join('');
+    return `<div class="grow"><div class="gl"><b>${p.p}</b><span>${p.d}</span></div><div class="gtrack">${segs}</div><div class="gtot">${tot.toFixed(1)}<span style="font-size:11px;color:var(--ink2)"> wks</span></div></div>`}).join('');
+  $('#ganttLegend').innerHTML=stageDefs.map(s=>`<span><i style="background:var(${s.c})"></i>${s.n}</span>`).join('')+`<span style="color:var(--ink3)">Taiwan share of JJ-A7 cycle: ${(14.5/19.9*100).toFixed(0)}% (fab + probe + export flight)</span>`;
+  $('#mrpBody').innerHTML=[
+    ['JJ-A7 wafer (N5)','196 d','0 (die bank at OSAT)','Fixed 25 wf','PD'],
+    ['JJ-A7 finished','141 d','3 wks','Weekly lot-for-lot','PD'],
+    ['JJ-P3 finished','110 d','3 wks','Weekly lot-for-lot','PD'],
+    ['JJ-M2 finished','99 d','4 wks','Weekly lot-for-lot','PD'],
+    ['ABF substrate (A7)','154 d','8 wks','Min 5,000','VB']
+  ].map(r=>`<tr><td>${r[0]}</td><td class="num mono">${r[1]}</td><td class="num">${r[2]}</td><td>${r[3]}</td><td class="mono">${r[4]}</td></tr>`).join('');
+}
+
+/* ---------- risk register ---------- */
+const risks=[
+  {id:'R01',t:'PRC quarantine of Taiwan (customs/inspection regime)',n:'Front end',L:2,I:5,w:'Coast-guard "law enforcement" patrols around Taiwan; insurer war-risk notices',m:'Hold 8+ wks die bank outside Taiwan; pre-qualify TSMC Arizona/Kumamoto; pre-book air capacity from non-TW origin',src:'[1]'},
+  {id:'R02',t:'PRC blockade or armed conflict in Taiwan Strait',n:'Front end',L:1,I:5,w:'Large-scale PLA mobilisation; NOTAMs closing airspace; evacuation advisories',m:'Second source for every part outside Taiwan; last-time-buy playbook; customer allocation rules agreed in advance',src:'[1][17]'},
+  {id:'R03',t:'PLA exercises disrupting air/sea lanes (days to weeks)',n:'TW → MY lane',L:4,I:3,w:'Exercise announcements, airspace closures, freight rate spikes',m:'Split probe-out shipments across carriers/airports (TPE, KHH); 2-wk transit buffer',src:'[16]'},
+  {id:'R04',t:'Taiwan power shortfall from LNG supply shock (Hormuz)',n:'Front end',L:3,I:4,w:'Taipower reserve margin warnings; LNG spot price spikes',m:'Contractual allocation priority with TSMC; watch reserve margin weekly',src:'[2][14]'},
+  {id:'R05',t:'Major earthquake in Taiwan',n:'Front end',L:2,I:4,w:'CWA seismic alerts; TSMC tool recovery bulletins',m:'Die bank covers 6 wks; business-interruption insurance',src:'[18]'},
+  {id:'R06',t:'TSMC capacity crowded out by AI demand',n:'Front end',L:4,I:4,w:'Quoted lead times rising; allocation letters',m:'Rolling 18-month wafer forecast; long-term capacity agreement; move mature parts off TSMC',src:'[3][5]'},
+  {id:'R07',t:'China export controls on gallium, germanium, rare earths',n:'Tier-2 inputs',L:3,I:3,w:'MOFCOM notices; supplier price jumps',m:'Map sub-tier content; hold safety stock of affected materials at OSAT',src:''},
+  {id:'R08',t:'US tariffs: Section 232 Phase 2 broadens coverage',n:'Americas',L:4,I:3,w:'Commerce update; new HTS lists in Federal Register',m:'Confirm HTS and origin per part; model duty-inclusive price; consider US-fab second source for US-bound volume',src:'[12][13]'},
+  {id:'R09',t:'US export-control breach on China-bound shipments',n:'APAC',L:2,I:4,w:'Entity List updates; new ECCN rules',m:'Automated restricted-party screening at Changi DC; end-use certificates',src:''},
+  {id:'R10',t:'ABF substrate shortage limits flip-chip output',n:'Penang ATP',L:4,I:3,w:'Substrate allocation cuts; lead time >20 wks',m:'Qualify second substrate vendor; 8-wk substrate safety stock',src:'[11]'},
+  {id:'R11',t:'Single distribution hub at Changi',n:'Distribution',L:2,I:3,w:'Airport disruption; 3PL system outage',m:'Backup export from Penang (PEN) or KUL; mirrored WMS',src:''},
+  {id:'R12',t:'Air freight and cargo insurance cost spikes',n:'All lanes',L:4,I:2,w:'Rate indices; insurer notices',m:'Annual rate contracts; value-based insurance review',src:'[16]'},
+  {id:'R13',t:'Cyberattack on foundry, OSAT or 3PL',n:'All nodes',L:3,I:4,w:'Vendor security incidents; phishing on EDI accounts',m:'Supplier security audits; offline copies of wafer maps and lot genealogy',src:''}
+];
+function sevClass(s){return s>=15?'crit':s>=9?'warn':'ok'}
+function renderRisk(){
+  $('#riskBody').innerHTML=risks.map(r=>{const s=r.L*r.I;return `<tr id="row-${r.id}"><td class="mono">${r.id}</td><td><b style="font-weight:600">${r.t}</b> <sup>${r.src}</sup></td><td>${r.n}</td><td class="num mono">${r.L}</td><td class="num mono">${r.I}</td><td><span class="pill ${sevClass(s)}">${s}</span></td><td style="color:var(--ink2);min-width:180px">${r.w}</td><td style="min-width:220px">${r.m}</td></tr>`}).join('');
+  let h='';
+  for(let L=5;L>=1;L--){
+    h+=`<div class="ax">${L}</div>`;
+    for(let I=1;I<=5;I++){
+      const s=L*I, cls=sevClass(s);
+      const ids=risks.filter(r=>r.L===L&&r.I===I).map(r=>`<button class="rid" data-r="${r.id}">${r.id}</button>`).join('');
+      h+=`<div class="c" style="background:var(--${cls}-soft)">${ids}</div>`;
+    }
+  }
+  h+=`<div></div>`+[1,2,3,4,5].map(i=>`<div class="ax">${i}</div>`).join('');
+  $('#heat').innerHTML=h+`<div style="grid-column:1/-1;display:flex;justify-content:space-between;color:var(--ink3);font-size:11px"><span>↑ Likelihood</span><span>Impact →</span></div>`;
+  $('#heat').style.gridTemplateRows='repeat(5,52px) 24px auto';
+  $$('.rid').forEach(b=>b.addEventListener('click',()=>{
+    $$('#riskBody tr').forEach(t=>t.classList.remove('hl'));
+    const row=$('#row-'+b.dataset.r);row.classList.add('hl');row.scrollIntoView({behavior:'smooth',block:'center'});
+  }));
+}
+
+/* ---------- scenario simulator ---------- */
+const scen=[
+  {k:'base',n:'Baseline',f:1,D:0,add:{},desc:'Normal operations.',act:['Keep booking TSMC wafer starts on an 18-month rolling forecast.','Review die bank weekly against demand.']},
+  {k:'drill',n:'PLA exercise',f:.85,D:3,add:{x1:1},desc:'Short exercise closes airspace and sea lanes for days; flights reroute and backlog. Output continues, exports slow.',act:['Shift probe-out shipments to Kaohsiung (KHH) flights where open.','Draw on Penang die bank; delay non-critical wafer transfers.']},
+  {k:'quar',n:'Quarantine',f:.4,D:12,add:{x1:4,fab:2},desc:'PRC declares an inspection regime on Taiwan-bound traffic. Energy imports and exports slow sharply for about 3 months; researchers judge Taiwan most vulnerable to this before 2027 [1].',act:['Activate allocation rules: protect highest-margin customers first.','Trigger TSMC Arizona/Kumamoto transfer for JJ-A7 and JJ-P3.','Raise die bank target to 12 weeks for the following year.']},
+  {k:'block',n:'Blockade',f:0,D:26,add:{},desc:'No wafers leave Taiwan for about 6 months. Only inventory outside Taiwan and non-Taiwan fabs can ship.',act:['Declare force majeure with customers per contract.','Run all qualified non-Taiwan capacity at maximum.','Start emergency qualification at Samsung / GlobalFoundries for mature parts.']},
+  {k:'quake',n:'M7 earthquake',f:.6,D:4,add:{fab:3,probe:1},desc:'Tool recalibration and wafer scrap reduce TSMC output for about a month.',act:['Request scrap and restart status by lot from TSMC.','Re-promise customer orders from die bank.']},
+  {k:'lng',n:'LNG shock',f:.85,D:8,add:{fab:1.5},desc:'Middle East disruption tightens Taiwan\'s LNG supply; power rationing trims fab output [2][14].',act:['Ask TSMC for allocation priority on JJ-A7.','Pull forward wafer starts before rationing.']}
+];
+let cur='quar', mapRestart=true;
+$('#scenBtns').innerHTML=scen.map(s=>`<button data-k="${s.k}" aria-pressed="${s.k===cur}">${s.n}</button>`).join('');
+$$('#scenBtns button').forEach(b=>b.addEventListener('click',()=>{cur=b.dataset.k;$$('#scenBtns button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.k===cur));setScenDefaults();mapRestart=true;runSim()}));
+function setScenDefaults(){const S=scen.find(s=>s.k===cur);$('#sDur').value=S.D;$('#sOut').value=Math.round(S.f*100)}
+['#sDur','#sOut','#sDie','#sFg','#sRev','#sAlt','#sCarry','#sIdle'].forEach(s=>$(s).addEventListener('input',runSim));
+function runSim(){
+  const S=scen.find(s=>s.k===cur);
+  const D=+$('#sDur').value, f0=+$('#sOut').value/100;
+  const die=+$('#sDie').value, fg=+$('#sFg').value, rev=+$('#sRev').value, alt=$('#sAlt').checked;
+  $('#oDur').textContent=D+' wks';$('#oOut').textContent=Math.round(f0*100)+'%';
+  $('#oDie').textContent=die+' wks';$('#oFg').textContent=fg+' wks';$('#oRev').textContent='$'+rev.toFixed(1)+'M';
+  $('#scenDesc').textContent=S.desc;
+  const base=products[0].w, wipDown=base.x1+base.asm+base.x2+base.test+base.dc; // chips already past Taiwan
+  const delay=D>0?Object.values(S.add).reduce((a,b)=>a+b,0):0; // added transit/fab weeks = weeks with no arrivals
+  const cover=die+fg+wipDown, full=20+10+wipDown;
+  const supplyAt=t=>{ // share of weekly demand arriving in week t
+    if(t>D) return 1;
+    let f=f0; if(alt&&t>=6) f=Math.min(1,f+.3);
+    const blocked=Math.min(1,Math.max(0,delay-(t-1))); // arrivals paused while delay works through
+    return f*(1-blocked);
+  };
+  const carry=+$('#sCarry').value/100, idleWk=+$('#sIdle').value;
+  $('#oCarry').textContent=Math.round(carry*100)+'%';$('#oIdle').textContent='$'+idleWk.toFixed(1)+'M';
+  const unitVal=rev*0.5, wkRate=carry/52; // $M of inventory per week of demand; carrying rate per week
+  let inv=cover, series=[inv], lost=0, gross=0, stockWk=null, holdEvt=0, stuckCost=0, idleCost=0, idleWks=0, cancelCum=0; const weeks=[];
+  const horizon=Math.max(D+8,20);
+  for(let t=1;t<=horizon;t++){
+    const sup=supplyAt(t), short=1-sup;
+    if(t<=D) gross+=short;
+    inv-=short;
+    if(t>D && inv<cover) inv=Math.min(cover,inv+0.25);
+    if(inv<0){lost+=-inv;inv=0;if(stockWk===null)stockWk=t}
+    // back end idles once die bank + pipeline are gone and only finished goods remain
+    if(inv<=fg && short>0){const idle=Math.min(1,short);idleCost+=idle*idleWk;idleWks+=idle}
+    if(t<=D){holdEvt+=inv*unitVal*wkRate; stuckCost+=Math.min(delay,t)*f0*unitVal*wkRate}
+    series.push(inv);
+    const blk=t<=D?Math.min(1,Math.max(0,delay-(t-1))):0, tw=t<=D?f0*(1-blk):1, altS=t<=D&&alt&&t>=6?(Math.min(1,f0+.3)-f0)*(1-blk):0;
+    if(t<=D) cancelCum+=4*(1-tw);
+    weeks.push({tw,alt:altS,inv,fgL:Math.min(inv,fg),upL:Math.max(0,inv-fg),idle:(inv<=fg&&short>0)?Math.min(1,short):0,stock:inv<=0&&short>0,lost,cancel:cancelCum});
+  }
+  const bufAnnual=(die+fg)*unitVal*carry, lostMargin=lost*rev*0.5, holdTot=holdEvt+stuckCost, total=holdTot+idleCost+lostMargin;
+  const covered=Math.max(0,gross-lost);
+  const lt=Object.entries(base).reduce((a,[k,v])=>a+v+(D>0?(S.add[k]||0):0),0);
+  $('#outcome').innerHTML=`
+    <div><div class="v">${D>0&&f0===0?'No supply':lt.toFixed(1)+' wks'}</div><div class="n">JJ-A7 cycle time during event</div></div>
+    <div><div class="v">${cover.toFixed(1)} wks</div><div class="n">Cover outside Taiwan (${die} die bank + ${fg} FG + ${wipDown.toFixed(1)} pipeline)</div></div>
+    <div><div class="v" style="color:var(${stockWk?'--crit':'--ok'})">${stockWk?'Week '+stockWk:'None'}</div><div class="n">First stock-out</div></div>
+    <div><div class="v">$${(gross*rev).toFixed(1)}M</div><div class="n">Revenue exposed (${gross.toFixed(1)} wks of supply missing)</div></div>
+    <div><div class="v" style="color:var(--ok)">$${(covered*rev).toFixed(1)}M</div><div class="n">Protected by buffers</div></div>
+    <div><div class="v" style="color:var(${lost>0?'--crit':'--ok'})">$${(lost*rev).toFixed(1)}M</div><div class="n">Revenue lost (${lost.toFixed(1)} wks stocked out)</div></div>`;
+  const m=v=>'$'+(v>=10?v.toFixed(1):v.toFixed(2))+'M';
+  $('#costs').innerHTML=`
+    <div><div class="v">${m(holdTot)}</div><div class="n">Holding cost during event (buffers ${m(holdEvt)} + stuck in transit ${m(stuckCost)})</div></div>
+    <div><div class="v" style="color:var(${idleCost>0?'--warn':'--ok'})">${m(idleCost)}</div><div class="n">Idle back-end cost (${idleWks.toFixed(1)} wks with no wafers to run)</div></div>
+    <div><div class="v" style="color:var(${lostMargin>0?'--crit':'--ok'})">${m(lostMargin)}</div><div class="n">Lost gross margin on stocked-out sales</div></div>
+    <div class="total"><div class="v" style="color:var(--crit)">${m(total)}</div><div class="n">Total cost of the event</div></div>
+    <div><div class="v">${m(bufAnnual)}</div><div class="n">Yearly cost to keep ${die+fg} wks of buffer on hand</div></div>
+    <div><div class="v" style="color:var(--ok)">${m(covered*rev*0.5)}</div><div class="n">Margin protected by inventory in this event</div></div>`;
+  const parts=[[holdTot,'--accent','Holding'],[idleCost,'--warn','Idle'],[lostMargin,'--crit','Lost margin']];
+  $('#costbar').innerHTML=total>0?parts.map(([v,c,l])=>`<i style="width:${v/total*100}%;background:var(${c})" title="${l}: ${m(v)}"></i>`).join(''):'';
+  $('#costbar').setAttribute('aria-label',parts.map(([v,,l])=>l+' '+m(v)).join(', '));
+  $('#actions').innerHTML=S.act.map(a=>`<li>${a}</li>`).join('');
+  drawDeplete(series,D,full);
+  LiveMap.set({S,D,horizon,weeks,cover,fg,die,wip:wipDown,rev,alt,full},mapRestart); mapRestart=false;
+}
+function drawDeplete(s,D,cap){
+  const W=420,H=220,p={l:36,r:12,t:14,b:30};
+  const maxY=cap, n=s.length-1;
+  const X=i=>p.l+(W-p.l-p.r)*i/n, Y=v=>H-p.b-(H-p.t-p.b)*v/maxY;
+  let h='';
+  const ticks=[0,10,20,30];
+  ticks.forEach(v=>{h+=`<line x1="${p.l}" x2="${W-p.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${css('--line')}"/><text x="${p.l-6}" y="${Y(v)+4}" font-size="10" text-anchor="end" fill="${css('--ink3')}">${v}</text>`});
+  if(D>0) h+=`<rect x="${X(0)}" y="${p.t}" width="${X(Math.min(D,n))-X(0)}" height="${H-p.t-p.b}" fill="${css('--crit-soft')}" opacity=".7"/><text x="${X(0)+6}" y="${p.t+12}" font-size="10" fill="${css('--crit')}" font-weight="600">Disruption · ${D} wks</text>`;
+  const pts=s.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  h+=`<polygon points="${X(0)},${Y(0)} ${pts} ${X(n)},${Y(0)}" fill="${css('--accent')}" opacity=".15"/>`;
+  h+=`<polyline points="${pts}" fill="none" stroke="${css('--accent')}" stroke-width="2"/>`;
+  const zi=s.findIndex(v=>v===0); if(zi>0) h+=`<circle cx="${X(zi)}" cy="${Y(0)}" r="4" fill="${css('--crit')}"/>`;
+  for(let i=0;i<=n;i+=Math.max(2,Math.ceil(n/8))) h+=`<text x="${X(i)}" y="${H-p.b+14}" font-size="10" text-anchor="middle" fill="${css('--ink3')}">${i}</text>`;
+  h+=`<text x="${W-p.r}" y="${H-4}" font-size="10" text-anchor="end" fill="${css('--ink2')}">weeks from event</text><text x="4" y="${p.t-2}" font-size="10" fill="${css('--ink2')}">wks cover</text>`;
+  h+=`<line id="dPlay" x1="${X(0)}" x2="${X(0)}" y1="${p.t}" y2="${H-p.b}" stroke="${css('--ink')}" stroke-width="1.2" stroke-dasharray="3 3" opacity="0"/>`;
+  $('#deplete').innerHTML=h; window.__dep={X,n};
+}
+
+/* ---------- alternative foundries ---------- */
+const shares=[['TSMC',72.5],['Samsung',6.5],['SMIC',5.1],['UMC',3.9],['GlobalFoundries',3.3],['Hua Hong',2.5],['Tower',.8],['VIS',.8],['PSMC',.8]];
+$('#share').innerHTML=shares.map(([n,v])=>`<div class="row ${n==='TSMC'?'tsmc':''}"><span>${n}</span><div class="t"><i style="width:${v/72.5*100}%"></i></div><span class="mono num">${v}%</span></div>`).join('');
+const foundries=[
+  {n:'TSMC outside Taiwan',loc:'Arizona (US) · Kumamoto (JP) · Dresden (DE)',nodes:['lead','adv','mature'],v:['ok','Best fit'],
+   d:{Nodes:'Arizona N4 → N3; Kumamoto 28–12nm (55k wpm), 6/7nm Fab 2 from 2027; Dresden mature from 2027',Scale:'Arizona ~$165B program',Port:'Lowest: same PDKs and IP'},p:'Removes Taiwan country risk without changing foundry. Capacity is limited and priced at a premium, so book early.',src:'[7][8]'},
+  {n:'Samsung Foundry',loc:'Hwaseong & Pyeongtaek (KR) · Taylor & Austin, TX (US)',nodes:['lead','adv','mature'],v:['warn','Viable 2nd source'],
+   d:{Nodes:'SF2 (2nm GAA) in production since late 2025; 4nm, 8nm, 14nm mature',Share:'6.5% (Q1 2026)',Port:'High: full redesign on Samsung PDK'},p:'The only other foundry with volume leading-edge capacity. 2nm yields reported around 50–60% vs. TSMC 70%+. Korea carries its own regional risk.',src:'[4][5]'},
+  {n:'Intel Foundry',loc:'Oregon & Arizona (US) · Ireland · Israel',nodes:['lead','adv'],v:['warn','Watch · limited'],
+   d:{Nodes:'18A in high-volume manufacturing since Jan 2026 (Panther Lake); Intel 3, 16',Share:'Outside top 10',Port:'High: new PDK and IP'},p:'US-based leading edge with backside power. External capacity is limited and still being proven with outside customers.',src:'[5][18]'},
+  {n:'GlobalFoundries',loc:'Malta, NY & Vermont (US) · Dresden (DE) · Singapore',nodes:['mature'],v:['ok','Strong for mature'],
+   d:{Nodes:'12/14nm FinFET, 22FDX, 28–180nm, RF & power',Share:'3.3% (Q1 2026)',Port:'Medium for 16/28nm parts'},p:'No leading edge, but a good home for JJ-P3 and JJ-M2 with US, EU and Singapore fabs.',src:'[4]'},
+  {n:'UMC',loc:'Hsinchu & Tainan (TW) · Singapore Fab 12i · Japan',nodes:['mature'],v:['ok','Good for 28nm+'],
+   d:{Nodes:'22/28nm and above; 12nm with Intel collaboration',Share:'3.9% (Q1 2026)',Port:'Medium; many TSMC-compatible 28nm flows'},p:'Pick the Singapore fab specifically; UMC\'s Taiwan fabs share TSMC\'s country risk.',src:'[4]'},
+  {n:'Rapidus',loc:'Chitose, Hokkaido (JP)',nodes:['lead'],v:['mute','Future option'],
+   d:{Nodes:'2nm (IBM technology)',Status:'Risk production 2027; volume targeted H2 2027',Port:'High; unproven'},p:'Heavily state-funded and worth tracking for 2028+, but not a source J&J can rely on today.',src:'[7]'},
+  {n:'VIS / VSMC',loc:'Hsinchu (TW) · Singapore (VIS–NXP JV)',nodes:['mature'],v:['mute','Niche'],
+   d:{Nodes:'130–40nm mixed-signal and power',Share:'0.8%',Port:'Medium'},p:'Relevant only if J&J adds power or analog parts. Singapore JV sits next to the back end.',src:'[4]'},
+  {n:'SMIC',loc:'Shanghai, Beijing, Shenzhen (CN)',nodes:['adv','mature'],v:['crit','Not recommended'],
+   d:{Nodes:'28nm+ in volume; constrained 7nm-class without EUV',Share:'5.1% (Q1 2026)',Port:'Blocked in practice'},p:'US export controls and stacked tariffs on China-origin chips make it unworkable for US-linked customers, and it swaps Taiwan risk for China risk.',src:'[4][18]'}
+];
+let nodeF='all';
+const nb=[['all','All nodes'],['lead','Leading edge (≤3nm)'],['adv','Advanced (4–7nm)'],['mature','Mature (12nm+)']];
+$('#nodeBtns').innerHTML=nb.map(([k,l])=>`<button data-k="${k}" aria-pressed="${k===nodeF}">${l}</button>`).join('');
+$$('#nodeBtns button').forEach(b=>b.addEventListener('click',()=>{nodeF=b.dataset.k;$$('#nodeBtns button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.k===nodeF));renderFoundries()}));
+function renderFoundries(){
+  $('#foundries').innerHTML=foundries.filter(f=>nodeF==='all'||f.nodes.includes(nodeF)).map(f=>`<article class="fcard">
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><h3>${f.n}</h3><span class="pill ${f.v[0]}">${f.v[1]}</span></div>
+    <div class="loc">${f.loc}</div>
+    <dl>${Object.entries(f.d).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+    <p>${f.p} <sup>${f.src}</sup></p></article>`).join('');
+}
+
+/* ---------- live network map ---------- */
+const MAPD={"W":1000,"H":840,"land":"M242,574L243,574L243,576L242,578L242,579L242,580L241,576L239,574L240,574L241,573L242,573ZM310,374L307,374L305,376L304,376L302,377L300,378L300,380L299,382L296,384L295,384L294,383L291,384L290,384L289,383L288,383L287,384L289,388L285,392L286,394L285,396L283,398L279,402L277,402L276,403L273,409L273,411L272,413L272,415L271,418L270,419L269,420L274,429L277,432L278,433L280,434L283,437L284,439L284,440L284,443L282,442L285,444L289,450L292,452L295,455L296,458L299,460L303,463L302,463L306,465L307,467L307,468L311,468L312,470L313,471L314,472L315,473L315,474L317,476L318,478L320,482L322,483L324,485L326,489L327,492L328,496L329,497L329,500L330,503L331,505L331,507L333,512L333,514L332,512L332,517L333,520L332,523L333,524L334,527L335,528L335,533L335,535L334,533L333,532L331,534L333,538L331,538L331,544L332,545L332,547L331,545L330,547L330,548L331,550L330,552L328,552L327,557L324,557L322,559L320,560L318,562L315,564L312,565L310,568L308,568L303,571L301,572L300,572L298,573L296,572L295,572L294,571L293,569L293,570L293,573L291,574L290,573L288,571L286,572L289,573L289,574L289,575L287,575L284,575L286,576L288,577L289,578L289,578L288,579L287,581L287,582L286,583L285,583L284,581L278,576L279,578L285,583L286,585L286,587L284,588L282,588L279,586L275,581L273,580L278,586L279,589L279,591L267,596L266,598L264,601L262,603L261,604L257,605L255,605L257,602L255,601L255,595L256,587L257,584L258,583L260,582L260,580L259,579L258,579L256,578L255,577L253,577L252,577L252,576L249,573L249,573L251,571L255,571L256,571L260,567L259,565L259,564L261,565L264,566L265,564L271,563L272,563L273,565L275,565L278,566L279,566L278,564L279,563L278,561L274,559L273,558L273,554L273,553L273,552L275,551L276,549L278,550L282,551L283,551L283,546L284,546L288,546L289,544L292,544L294,542L296,540L298,540L299,540L300,541L302,539L302,538L303,536L302,533L301,529L301,527L303,524L304,520L303,518L302,516L300,510L299,509L299,508L299,503L301,502L302,498L302,497L302,495L302,494L301,492L302,492L303,491L304,489L304,487L303,485L299,482L298,481L296,479L296,478L296,477L299,476L300,474L300,473L298,473L297,472L294,469L292,468L291,467L291,465L290,465L289,466L287,465L286,463L285,462L285,458L285,457L283,456L282,454L281,452L276,449L274,447L272,445L271,443L269,441L269,438L267,435L264,435L261,432L260,430L260,429L261,426L261,426L259,425L254,423L252,422L249,420L243,416L240,415L240,414L242,412L242,411L242,410L242,408L242,408L246,407L251,409L251,409L254,406L255,405L256,403L257,401L257,400L257,398L255,398L253,398L253,397L253,396L252,395L250,394L248,393L248,393L251,391L251,391L251,390L247,387L245,385L243,384L242,384L239,386L238,387L236,388L235,389L232,387L228,386L226,385L222,379L222,378L222,375L223,373L223,371L221,370L221,368L220,370L219,371L218,370L217,367L217,366L215,365L215,364L212,361L210,359L209,358L211,356L213,353L214,351L216,351L219,353L221,354L223,356L224,356L226,355L227,354L229,351L229,350L230,351L232,354L233,353L234,351L235,350L240,355L241,354L242,351L244,350L245,350L247,351L248,352L250,350L253,349L255,348L256,344L256,343L262,341L263,340L265,340L267,343L268,345L271,345L273,347L275,347L276,346L278,347L279,347L280,348L282,349L285,348L287,348L289,350L288,353L287,354L286,354L285,355L285,357L285,358L287,359L287,360L287,365L288,365L291,366L293,367L293,368L296,370L298,370L299,372L301,371L301,372L304,372L306,371L307,371ZM286,603L286,603L287,602L287,603ZM296,573L295,574L294,574L296,573ZM291,387L291,387L289,386L290,385L291,386ZM304,379L301,382L300,381L301,379L301,378L303,379ZM302,385L301,385L300,385L301,384L303,383ZM294,388L293,388L292,386L292,386L294,386L294,387ZM830,589L829,591L829,590L830,588L831,587L831,588ZM961,424L960,425L959,423L960,424ZM961,468L960,468L959,467L960,467ZM953,507L952,508L951,507L952,506ZM962,437L961,437L962,435L963,436ZM961,490L961,490L960,490L961,488L962,487ZM960,493L959,493L958,491L959,491ZM944,523L943,523L942,522L942,520L945,518L945,517L947,517L944,520ZM217,551L217,553L216,552L217,551ZM214,545L212,546L212,543L212,543L213,544ZM145,617L145,618L144,618L143,619L142,617L143,613L143,612L144,613L145,614L145,616ZM175,396L175,397L177,395L178,394L179,395L180,397L181,398L182,400L180,404L179,406L180,408L181,410L183,411L185,410L187,409L189,409L192,409L193,410L193,411L193,414L194,416L195,418L195,420L193,427L191,429L191,431L192,433L192,435L192,437L188,446L189,446L191,448L193,447L195,445L197,443L199,441L202,440L202,439L203,437L204,437L205,437L206,437L207,435L209,434L209,434L211,435L213,437L215,438L216,439L217,439L217,440L218,441L219,440L221,439L222,438L224,438L225,438L226,436L227,434L229,433L228,432L229,431L230,430L233,430L235,431L238,432L240,433L241,432L242,434L245,438L247,441L249,444L251,445L253,446L254,448L255,451L254,455L254,458L254,463L256,466L258,468L259,470L259,471L261,472L264,473L266,474L265,475L266,477L267,478L268,479L269,480L270,480L269,483L268,485L267,486L267,487L267,490L268,491L268,493L268,495L267,499L267,500L266,501L265,502L262,504L260,506L259,506L258,505L258,503L257,503L255,502L251,503L248,503L245,503L242,503L238,503L237,503L234,502L234,502L232,503L228,504L225,505L223,507L222,509L219,513L218,515L216,516L217,516L216,517L213,518L212,518L213,522L213,524L215,527L215,531L215,533L218,535L220,538L219,541L220,544L223,550L221,547L220,545L218,543L217,542L216,543L214,542L213,541L211,538L211,539L209,537L207,536L205,535L204,534L202,533L197,534L191,533L189,534L188,534L187,533L188,531L188,527L189,524L188,522L189,520L188,519L184,518L183,518L182,518L176,519L175,520L173,521L172,523L173,525L174,527L172,532L172,533L173,539L172,542L171,544L170,546L169,550L168,551L166,555L165,559L164,561L164,565L160,570L159,574L158,575L158,576L159,577L158,582L158,585L158,587L160,591L160,593L162,594L168,592L170,593L171,596L172,604L172,605L175,608L175,606L176,608L177,611L180,625L182,629L180,628L179,625L179,623L177,623L178,621L178,620L177,619L175,620L175,622L176,624L179,628L180,629L181,630L183,630L186,633L190,635L192,635L195,634L197,634L198,635L200,637L203,642L209,646L208,647L208,648L206,650L205,652L205,653L203,654L202,654L201,654L200,652L199,652L194,654L193,656L192,656L189,654L190,653L191,651L191,649L191,647L191,646L189,646L187,646L187,644L186,643L185,642L183,642L178,640L177,638L175,638L174,642L170,637L167,635L168,631L167,630L166,630L165,629L165,626L164,627L163,627L161,626L160,623L158,620L157,620L156,619L156,617L155,616L153,615L152,614L150,611L148,609L147,610L146,611L145,612L144,612L143,611L142,608L142,606L142,602L144,598L144,593L146,589L146,588L148,583L150,577L151,573L151,571L151,569L151,568L153,567L156,564L158,561L161,556L163,552L165,551L166,549L164,544L163,542L162,537L162,536L159,532L158,530L158,528L157,527L157,526L158,523L158,519L158,515L155,511L154,509L150,506L148,503L146,501L142,495L141,492L141,489L141,488L143,487L144,487L146,486L147,486L148,485L147,482L148,478L148,473L152,471L153,470L153,468L152,467L150,469L149,468L148,465L146,461L146,458L145,457L142,453L141,452L137,447L134,444L133,441L133,439L133,437L132,435L132,433L130,433L128,432L127,429L129,429L132,428L133,428L134,427L133,421L133,420L135,418L134,415L135,411L136,409L138,408L138,406L140,406L142,407L146,407L151,406L154,406L155,404L156,401L156,400L159,399L160,400L161,400L163,399L164,398L163,395L166,396L169,395L171,394L172,394ZM174,586L174,586L172,585L172,584L173,584ZM174,588L173,590L172,590L171,590L172,588ZM167,641L166,641L166,640L166,638L167,640ZM148,616L148,617L147,613L148,614ZM143,597L142,597L143,596L143,595ZM157,622L157,624L156,623L156,622ZM535,353L533,358L532,360L532,362L532,366L530,365L529,364L529,362L527,358L526,356L524,356L523,355L521,351L520,346L519,344L519,343L520,339L519,336L520,334L520,333L528,318L530,315L532,314L533,312L534,310L535,308L536,307L541,305L542,304L543,303L545,303L546,305L549,306L550,307L550,309L549,310L549,312L548,313L549,317L547,322L546,325L545,326L545,330L544,333L543,338L541,343L540,347L537,350ZM490,317L491,319L490,319L488,319L488,318L489,318ZM632,49L632,49L632,46L634,45L637,41L638,39L639,38L641,38L643,38L647,38L651,37L654,38L656,38L658,36L659,35L660,33L661,31L662,31L666,41L670,47L673,51L678,60L680,65L680,68L681,72L680,74L680,77L680,79L679,81L679,83L679,86L680,87L682,86L682,89L681,94L680,98L678,102L676,105L674,106L672,107L669,107L666,106L664,107L663,107L662,108L663,110L663,111L660,111L658,111L657,110L656,108L655,108L653,109L650,110L649,111L649,112L651,113L650,115L649,115L648,114L647,112L645,112L645,114L646,117L645,118L645,119L644,120L641,118L641,117L642,116L643,115L642,114L638,117L636,120L635,120L634,119L631,121L631,123L630,123L629,122L629,121L629,119L626,117L625,116L626,115L628,115L630,115L629,114L630,113L631,112L630,112L629,113L628,112L628,110L626,108L626,105L627,104L629,99L629,98L631,97L631,97L629,96L629,95L633,92L634,90L632,89L633,87L630,84L630,83L630,80L630,77L629,75L629,73L627,74L625,73L624,73L623,71L624,69L627,67L628,67L629,66L631,66L633,67L634,67L635,69L637,68L637,67L636,67L634,64L634,62L634,60L633,57L632,56L632,54L631,52L630,51ZM668,113L666,114L664,113L664,112L667,109L668,108ZM656,113L656,115L655,115L654,114L653,114L652,113L652,111L654,110L656,111ZM625,122L624,122L623,121L623,120L625,118L627,118L627,119L626,121ZM630,50L630,53L628,53L627,49L628,48L629,49ZM634,122L634,123L633,123L632,122L632,122L633,121ZM652,117L652,117L651,116L652,115ZM628,77L628,78L627,77L626,74L627,75ZM624,114L623,115L622,112L621,112L622,111L624,112ZM705,56L705,56L704,56L704,54L705,54L706,55ZM626,146L625,146L624,144L624,143L627,141L633,139L634,139L636,140L637,141L636,143L633,145L631,145ZM241,731L238,732L235,731L236,729L238,729L241,730L241,730ZM536,427L539,428L545,431L547,432L549,433L551,433L552,432L554,429L556,429L557,431L557,432L557,434L556,435L555,437L554,442L554,444L555,446L556,448L556,449L558,450L558,451L559,453L561,454L560,456L559,459L556,466L555,468L554,471L551,471L548,473L546,474L545,475L544,477L545,479L545,480L543,483L542,485L541,486L541,487L542,488L544,492L546,497L545,498L546,501L547,506L548,507L549,509L550,509L553,511L555,511L556,510L557,510L556,509L555,508L555,507L557,506L558,505L560,504L563,504L566,505L568,507L569,508L570,511L570,514L571,514L573,514L574,513L574,511L573,510L575,509L575,509L576,510L580,512L581,512L584,513L583,515L579,515L578,516L579,518L581,520L583,523L583,524L583,526L584,526L585,526L587,527L589,527L589,531L587,535L586,535L584,533L584,531L585,529L585,529L582,529L580,529L576,527L574,527L574,526L574,524L573,521L572,520L567,517L567,517L565,514L562,511L560,511L560,512L560,514L560,516L562,518L563,521L563,523L562,524L561,523L560,521L559,519L555,516L553,514L548,511L547,511L546,511L543,513L542,514L542,515L540,516L538,516L536,516L535,514L533,514L532,512L530,512L528,513L528,510L528,507L529,505L533,501L534,500L533,498L533,497L531,496L529,496L528,495L527,494L527,496L527,499L527,501L527,502L525,502L524,501L524,499L522,498L522,496L520,496L519,495L518,492L518,490L517,488L516,484L515,477L515,476L513,474L513,473L513,470L514,468L516,470L518,471L519,473L520,473L523,473L524,471L524,470L523,467L522,465L522,463L523,460L524,457L524,455L524,451L525,448L524,446L523,445L526,435L527,433L527,431L528,429L530,428L531,427L533,427ZM471,608L469,609L470,606L472,603L473,602L476,598L478,596L481,594L483,593L485,592L489,587L492,584L495,580L497,578L500,574L502,573L504,572L505,570L505,568L504,566L505,563L508,558L509,557L510,557L510,558L509,561L510,562L509,564L511,568L512,571L512,572L510,573L509,574L507,574L506,575L505,576L503,579L499,580L496,582L496,583L496,584L493,590L490,593L489,594L487,595L485,596L484,598L483,600L481,601L477,603L475,604L474,606L473,607ZM560,552L562,553L564,552L566,552L568,554L567,555L571,553L572,553L571,556L570,559L569,561L568,562L566,563L565,565L565,566L563,566L561,568L555,569L554,570L552,572L551,573L551,572L551,569L551,567L551,565L552,563L553,561L553,557L554,552L553,550L551,549L550,549L550,548L551,547L552,547L553,548L557,549L559,550ZM571,597L569,597L568,596L567,592L565,591L563,591L561,589L559,586L559,583L559,582L560,581L561,581L564,581L566,579L567,578L567,575L566,573L566,572L567,570L568,568L569,565L573,563L573,563L578,564L579,567L577,570L576,572L575,575L574,578L574,579L572,582L572,583L572,585L572,587L574,592L575,593L573,596ZM596,557L597,557L599,557L600,556L602,556L604,559L604,560L604,564L604,567L604,567L606,568L607,570L607,572L608,574L608,576L606,576L606,577L605,577L604,575L603,574L604,580L602,579L600,578L600,577L600,575L599,573L600,568L600,567L599,565L598,563L597,563L595,564L594,564L593,560L593,556L592,554L592,553L594,555L596,556ZM608,536L609,537L609,540L610,540L612,541L613,542L612,543L612,544L611,546L611,549L612,550L612,552L612,553L614,556L614,557L613,559L614,559L616,560L616,562L616,562L615,561L614,560L611,561L609,560L607,560L606,558L605,558L604,557L602,554L602,553L603,552L603,549L602,550L601,549L600,547L598,545L596,544L594,543L593,541L592,538L591,535L596,536L601,536L606,535ZM529,519L530,519L533,519L534,519L535,520L537,521L538,520L539,521L541,523L543,525L544,526L543,527L543,529L543,530L544,534L543,535L542,536L542,538L541,540L540,540L539,541L537,541L536,540L534,537L533,536L533,534L531,532L531,531L530,528L528,525L526,523L525,521L523,520L523,519L524,518L525,518L529,519ZM621,592L622,593L624,593L624,596L624,596L626,599L626,601L625,602L623,604L624,605L626,606L627,607L627,610L629,612L628,617L628,618L631,621L631,623L631,628L630,630L628,632L626,635L624,635L624,635L625,637L625,642L624,645L623,642L622,637L621,635L620,634L620,632L619,631L618,627L617,627L615,628L614,631L613,632L611,634L610,636L610,638L611,639L612,640L614,642L615,646L615,650L614,652L611,656L609,657L608,656L607,653L608,651L608,649L607,649L607,649L605,652L604,652L602,652L597,650L593,648L590,646L588,643L587,641L587,638L586,635L586,633L587,631L589,629L590,627L590,626L587,623L586,621L582,620L580,618L578,618L577,619L577,619L577,621L576,626L572,623L571,620L569,623L566,623L566,623L565,620L564,619L562,619L560,621L559,623L557,627L556,630L554,634L553,634L552,634L551,633L550,631L550,629L553,626L554,621L554,619L556,616L558,615L562,614L563,613L566,613L567,613L569,611L569,609L571,607L572,606L574,606L575,605L576,603L579,604L581,604L582,606L584,608L584,612L584,613L582,614L583,614L586,612L589,612L590,611L591,609L592,606L593,605L594,605L597,606L599,605L599,603L600,600L600,599L601,598L602,599L604,600L606,600L607,597L610,598L612,598L613,595L612,593L611,586L612,585L612,585L615,586L619,589L620,590ZM575,590L575,590L574,589L575,588L576,582L576,581L578,578L579,575L581,572L582,570L583,568L585,563L585,562L585,561L586,560L587,558L587,559L587,561L587,564L587,567L587,570L586,573L585,575L584,576L583,576L581,578L580,580L580,582L577,588ZM550,422L549,423L549,423L550,420L551,420L552,421ZM543,413L544,415L543,415L541,414L541,413ZM551,395L550,395L551,393L552,393ZM550,387L549,389L548,389L549,386ZM537,649L538,650L539,650L541,650L542,651L540,652L538,651L536,652L535,651L533,652L532,651L533,650L535,648ZM467,617L466,619L465,617L465,615L465,614L467,614ZM516,572L514,572L513,571L515,569L517,570ZM519,542L521,542L521,541L522,543L523,544L523,545L520,545L519,545L517,545L517,544L515,542L515,542L515,540L519,542ZM518,550L517,551L516,549L515,546L516,546L518,547L518,548L519,549ZM563,572L561,573L561,572L561,570L563,567L564,568L564,569L563,572ZM596,584L596,585L594,585L593,586L592,587L588,587L585,587L584,586L583,584L585,582L587,580L588,579L589,578L592,578L595,579L596,580L596,582ZM522,663L521,664L519,664L519,664L517,665L517,666L515,666L514,666L514,665L517,663L519,663L520,662L521,661ZM553,643L551,643L550,641L550,640L548,639L549,639L550,638L553,637L557,639L557,640L556,640L555,642ZM622,584L621,583L621,582L622,579L623,581L623,583L624,584L623,584ZM615,582L615,582L615,581L614,580L613,579L612,578L612,577L612,575L615,573L615,573L615,576L616,579L615,581ZM522,514L522,515L519,514L519,512L521,513ZM550,518L552,518L554,519L554,521L552,524L550,523L549,522L549,520L549,518ZM553,539L552,543L551,542L551,541L551,540L551,538L552,538L552,535L554,534L554,534L554,536ZM563,540L562,540L559,537L560,537L562,537L563,538L564,538ZM574,530L575,533L574,531L572,530L570,528L568,527L568,526L570,526L573,529ZM582,537L582,539L582,538L580,535L579,534L580,533L581,534ZM581,540L585,542L587,546L587,549L587,550L586,548L584,547L581,546L582,545L580,544L580,544L578,542L577,541L576,542L574,545L572,547L572,546L573,543L573,539L574,538L573,536L573,535L577,536L579,537L579,538ZM592,516L592,518L591,517L589,518L587,517L587,516L588,514L588,510L589,509L590,508L592,511L593,512L593,514L593,516ZM555,509L555,510L551,507L551,506ZM552,492L551,494L552,496L552,498L550,498L551,497L550,496L550,495L549,494L549,493L549,491L551,491ZM592,570L591,570L592,568L593,568L593,569ZM608,581L608,582L606,579L606,578L607,578ZM568,626L568,626L566,627L566,627L565,626L566,625L567,626L567,625ZM617,633L617,634L615,631L616,629L617,630ZM597,554L595,554L594,553L592,551L594,551L595,551L596,552L597,553ZM600,595L600,596L598,596L597,595L597,594L599,594ZM539,418L539,420L538,419L538,417L538,417L539,417ZM515,554L515,555L515,556L513,555L513,554ZM582,558L583,560L582,560L581,558ZM557,536L556,536L556,535L557,535ZM620,587L620,588L619,587L620,585L620,585L621,586ZM601,552L601,553L600,553L599,550L600,551ZM472,612L470,612L470,610L472,610ZM581,594L581,595L580,596L578,596L577,594L580,593ZM879,845L879,813L879,809L879,799L881,799L882,799L891,803L895,805L896,805L900,807L906,809L912,811L920,812L923,813L926,815L928,816L929,817L931,819L933,819L935,820L937,819L939,820L940,820L940,821L942,823L944,823L946,824L947,826L948,827L950,829L952,829L954,829L962,837L962,838L962,843L962,845L879,845ZM966,835L965,836L964,835L963,834L964,833L965,832L966,833L966,834ZM983,845L983,844L985,843L986,844L986,845L983,845ZM984,787L990,789L990,788L990,789L989,789L986,791L985,791L984,791L981,791L978,791L978,791L976,791L975,792L975,790L976,790L976,788L977,788L979,788L980,787ZM998,793L997,794L995,794L996,793L997,792ZM710,701L710,701L710,701ZM769,626L768,626L767,625L768,624L768,622L769,622L770,620L770,621L770,624ZM666,-5L666,-4L664,-3L662,-2L660,-1L657,-1L655,0L653,2L648,5L647,7L647,10L647,12L647,14L646,13L645,14L645,16L645,18L648,19L650,20L651,20L655,25L659,28L662,31L662,31L661,31L660,33L659,35L658,36L656,38L654,38L651,37L647,38L643,38L641,38L639,38L638,39L637,41L634,45L632,46L632,49L632,49L631,49L627,47L624,48L623,50L623,50L622,47L620,47L617,45L615,45L615,46L613,48L611,50L610,50L610,50L609,48L605,47L603,46L607,44L608,43L606,42L603,43L602,42L600,42L598,42L601,39L601,37L603,34L605,32L609,30L613,29L611,28L609,28L606,27L606,25L611,16L611,15L610,13L610,11L607,9L605,9L601,7L600,5L599,6L599,8L597,9L597,6L596,5L593,3L592,2L592,0L593,-2L594,-4L596,-5L666,-5ZM602,10L601,11L601,10L602,9L602,9ZM174,642L175,638L177,638L178,640L183,642L185,642L186,643L187,644L187,646L189,646L191,646L191,647L191,649L191,651L190,653L189,654L192,656L193,656L194,654L199,652L200,652L201,654L202,654L203,654L205,653L205,652L206,650L208,648L208,647L209,646L212,646L213,647L216,652L221,656L222,658L224,658L226,660L228,663L231,670L232,673L232,678L231,685L230,689L231,690L232,693L232,695L232,697L232,703L232,705L233,706L238,709L239,710L241,715L245,724L246,728L246,729L244,730L243,729L243,727L241,726L241,729L240,729L238,728L236,729L234,731L232,731L231,728L230,727L222,723L219,722L216,718L209,715L205,711L203,709L199,707L197,705L195,704L196,702L195,698L192,694L190,691L187,688L185,685L186,684L186,683L184,681L183,678L183,673L181,667L178,657L179,654L178,650L177,647L175,644ZM475,682L473,681L470,679L467,679L463,679L460,678L458,679L457,678L455,679L454,678L451,678L449,680L447,679L445,679L445,680L443,681L441,686L441,689L440,691L441,693L441,694L440,696L439,698L440,700L439,701L436,702L435,701L433,704L433,705L433,706L432,708L434,709L434,711L430,713L427,715L427,716L427,718L428,720L428,721L426,722L425,725L425,726L423,728L423,729L420,728L419,728L416,729L414,729L412,729L410,731L407,732L405,731L404,731L403,731L398,729L397,729L396,727L396,727L388,727L384,728L383,729L382,731L381,734L378,734L376,736L375,736L373,736L371,737L370,736L367,736L364,736L361,736L355,739L354,739L350,736L347,733L346,732L343,730L342,729L339,726L339,723L337,723L337,721L338,719L340,722L342,723L345,724L347,724L349,724L351,724L352,724L356,727L358,727L360,727L361,727L364,729L366,730L363,728L363,727L363,725L365,724L365,721L366,719L366,718L367,717L366,716L365,714L366,713L366,712L368,713L370,713L370,708L371,706L373,705L375,704L381,703L392,701L395,700L397,698L399,696L402,692L404,689L409,685L412,680L413,680L414,677L413,675L415,674L418,676L419,678L419,679L419,680L421,680L423,683L424,684L425,684L426,683L427,682L428,680L427,680L428,678L427,677L427,672L427,672L431,669L431,673L433,678L435,679L437,678L436,677L436,674L435,672L433,669L438,668L440,666L441,666L441,664L439,663L438,662L438,660L441,658L441,657L442,658L443,658L445,658L446,657L447,655L449,652L450,650L451,648L457,641L458,640L461,633L462,633L463,633L463,636L463,637L462,639L464,639L466,636L467,634L468,633L470,634L470,636L471,638L472,639L474,640L476,641L477,642L477,644L477,645L476,647L477,649L476,651L474,652L480,651L481,650L483,649L484,650L485,652L484,653L482,654L482,655L483,655L485,654L487,653L489,653L491,654L492,655L493,657L495,658L499,660L501,660L503,660L504,660L505,662L504,664L504,665L502,666L498,667L494,668L492,668L489,667L487,668L486,670L488,673L492,676L493,677L493,678L492,678L489,679L487,679L483,680L481,680L478,679L478,679L477,679L476,681ZM245,707L244,707L244,706L245,704L245,706ZM177,662L177,663L176,662L176,660L177,659L178,660ZM170,642L171,644L170,645L169,645L168,645L167,644L167,644L166,643L168,643ZM468,630L467,631L467,630L467,628L468,627L470,627L470,628L470,629ZM195,702L194,702L194,701L195,701ZM369,712L368,712L367,712L367,706L368,706L369,707L369,711ZM481,681L478,682L477,682L477,680L479,680ZM209,358L210,359L212,361L215,364L215,365L217,366L217,367L218,370L219,371L220,370L221,368L221,370L223,371L223,373L222,375L222,378L222,379L226,385L228,386L232,387L235,389L236,388L238,387L239,386L242,384L243,384L245,385L247,387L251,390L251,391L251,391L248,393L248,393L250,394L252,395L253,396L253,397L253,398L255,398L257,398L257,400L257,401L256,403L255,405L254,406L251,409L251,409L246,407L242,408L242,408L242,410L242,411L242,412L240,414L240,415L243,416L249,420L252,422L254,423L259,425L261,426L261,426L260,429L260,430L261,432L264,435L267,435L269,438L269,441L271,443L272,445L274,447L276,449L281,452L282,454L283,456L285,457L285,458L285,462L286,463L287,465L289,466L290,465L291,465L291,467L292,468L294,469L297,472L298,473L300,473L300,474L299,476L296,477L296,478L296,479L298,481L299,482L303,485L304,487L304,489L303,491L302,492L301,492L302,494L302,495L302,497L301,498L300,500L300,500L298,499L297,501L295,502L294,502L292,504L290,504L289,503L286,501L285,500L284,501L282,502L280,501L279,503L279,503L276,503L276,504L276,505L278,508L278,509L277,511L274,511L273,510L271,508L268,507L265,508L265,508L263,506L262,505L262,504L265,502L266,501L267,500L267,499L268,495L268,493L268,491L267,490L267,487L267,486L268,485L269,483L270,480L269,480L268,479L267,478L266,477L265,475L266,474L264,473L261,472L259,471L259,470L258,468L256,466L254,463L254,458L254,455L255,451L254,448L253,446L251,445L249,444L247,441L245,438L242,434L241,432L240,433L238,432L235,431L233,430L230,430L229,431L228,432L229,433L227,434L226,436L225,438L224,438L222,438L221,439L219,440L218,441L217,440L217,439L216,439L215,438L213,437L211,435L209,434L209,434L207,435L206,437L205,437L204,437L203,437L202,439L202,440L199,441L197,443L195,445L193,447L191,448L189,446L188,446L192,437L192,435L192,433L191,431L191,429L193,427L195,420L195,418L194,416L193,414L193,411L193,410L192,409L189,409L187,409L185,410L183,411L181,410L180,408L179,406L180,404L182,400L181,398L180,397L179,395L178,394L177,395L175,397L175,396L176,391L177,388L178,387L179,386L181,387L182,386L183,385L182,385L181,385L182,382L183,382L184,381L185,379L185,377L187,377L188,376L191,375L192,373L193,374L193,376L193,377L194,379L195,380L197,379L199,379L200,380L202,380L204,379L202,377L202,376L203,372L202,368L202,367L200,365L199,362L199,362L199,360L200,359L201,356L203,356L204,357L206,356L207,356ZM748,83L747,84L746,84L745,83L745,81L746,80L748,82ZM834,48L831,48L832,48L833,45L832,44L832,43L833,41L836,37L836,39L835,43L837,43L836,46ZM775,124L773,125L771,125L770,125L770,124L772,122L773,120L775,118L776,118L774,121ZM700,206L698,206L697,206L696,203L698,202L701,204ZM706,203L705,203L705,202L706,200L706,198L707,195L708,194L708,195L708,198L707,200ZM691,166L690,167L689,166L690,165L689,164L690,161L690,160L693,160L693,161L693,164ZM677,127L676,128L676,127L676,123L678,124L678,125ZM679,122L679,123L677,122L678,119L678,117L680,115L681,116L681,118L679,121ZM667,155L667,155L669,155L670,155L671,157L669,158L668,159L666,158ZM696,162L695,162L694,161L696,160L698,160ZM765,120L763,121L762,119L764,118L765,119ZM853,114L853,115L851,115L851,113L852,113ZM674,154L673,154L672,151L673,151L674,148L675,150L676,150L674,152ZM681,146L680,147L679,147L680,146L680,143L682,143L681,144ZM686,135L685,136L684,135L685,133L686,133ZM734,127L734,128L732,128L734,126ZM729,131L730,132L732,131L730,133L728,132L728,131ZM685,178L684,178L685,177L686,175L686,176ZM900,277L899,277L898,275L899,275L900,277ZM710,138L712,139L714,138L717,137L719,138L719,139L719,140L718,142L716,145L719,145L722,145L722,147L722,148L723,149L723,151L724,152L724,154L719,159L718,161L717,164L717,166L716,171L715,173L715,175L715,177L713,183L711,183L709,182L708,182L708,183L709,186L705,189L701,191L701,190L703,188L703,186L703,183L702,180L702,179L703,179L703,177L703,177L701,176L699,180L699,182L699,184L701,186L700,187L695,186L693,185L692,183L695,182L695,179L694,177L693,175L693,174L693,172L693,169L693,168L695,168L698,165L699,161L701,158L699,158L698,157L699,156L699,154L697,151L696,148L694,147L692,148L693,150L693,153L694,153L695,153L696,155L696,156L694,157L692,155L691,155L689,156L687,158L686,159L686,158L687,156L686,155L684,153L684,150L684,149L686,151L687,153L688,153L690,153L688,150L686,149L684,147L682,145L683,143L684,143L687,144L687,143L687,141L688,140L691,140L693,138L694,138L696,137L697,135L698,133L702,131L704,131L706,132L708,136ZM765,124L767,125L770,125L770,129L771,131L770,133L771,133L768,135L765,138L763,141L762,143L762,145L761,144L758,141L756,140L753,140L752,140L746,143L746,145L744,149L743,150L742,151L741,154L739,155L738,155L736,155L735,155L736,152L735,152L733,152L733,150L732,149L732,148L733,146L733,144L731,143L731,141L729,142L726,143L725,143L726,142L729,141L733,137L735,136L736,134L738,130L740,128L741,128L742,130L744,131L745,131L747,130L750,130L751,129L752,128L752,127L752,125L754,125L756,123L758,122L760,122L762,123ZM893,-5L894,-2L895,1L896,5L896,7L896,9L896,13L895,17L895,20L894,20L893,21L892,22L891,23L890,25L889,28L888,30L888,33L887,36L886,36L884,36L881,37L881,38L879,41L878,43L878,45L879,51L880,56L879,64L879,66L878,68L876,69L875,72L873,77L873,79L872,83L873,86L875,91L877,93L873,95L870,98L869,100L869,103L868,105L865,107L863,108L861,111L859,111L859,110L859,109L859,107L860,104L859,102L860,101L861,100L864,97L864,96L862,95L859,95L858,96L858,98L856,100L856,102L858,103L856,106L856,106L855,104L853,102L851,102L849,103L848,104L847,107L847,110L846,112L845,114L843,117L842,117L841,115L841,111L841,109L843,108L842,107L840,106L838,107L836,109L834,112L832,114L831,117L827,116L823,116L820,116L816,116L811,117L812,117L815,115L815,114L812,114L811,114L810,113L809,113L809,115L808,114L808,113L808,109L809,108L808,107L806,108L805,109L803,113L802,115L804,117L808,120L808,121L808,122L808,123L807,123L802,124L799,126L798,128L794,134L792,139L788,140L784,139L783,137L782,135L780,134L779,132L778,130L778,126L778,124L778,123L780,122L782,119L783,118L783,117L782,116L779,116L777,116L775,116L771,114L769,114L767,114L765,115L762,115L760,117L758,119L756,119L753,120L749,121L745,122L744,123L742,123L737,124L735,125L733,124L731,122L730,123L728,125L728,129L727,131L727,133L726,133L720,129L720,129L715,129L712,130L711,131L708,129L705,130L705,124L705,123L707,121L709,121L711,121L713,121L714,120L716,118L717,117L722,114L725,111L727,109L729,108L731,105L735,102L736,100L737,99L740,98L744,97L746,97L748,99L750,98L752,98L754,98L756,98L762,97L764,97L766,95L774,95L779,93L780,93L781,95L780,96L782,98L786,98L788,98L790,97L791,96L793,94L795,93L793,90L793,88L794,85L796,83L798,81L799,80L803,75L805,72L806,67L806,62L808,58L810,57L814,55L816,55L816,57L813,60L811,61L809,62L809,64L810,66L811,67L811,70L812,71L815,71L816,71L819,67L826,65L829,63L831,62L833,61L837,58L840,54L841,52L842,49L843,48L849,44L852,41L853,36L854,33L855,31L856,29L858,27L859,25L861,17L862,15L863,13L863,8L863,6L862,3L861,3L859,3L858,2L858,1L859,1L860,-1L862,-3L862,-5L893,-5ZM591,317L590,320L589,321L589,321L588,319L588,318L590,319L591,316L592,316ZM584,322L583,322L581,322L581,321L582,321L582,319L585,320ZM611,313L610,314L608,313L608,311L609,312ZM660,277L658,277L657,279L656,279L654,280L653,281L653,282L654,283L653,283L652,284L652,286L651,287L649,287L649,285L650,283L650,281L652,281L654,278L654,278L653,277L654,276L655,276L656,277L657,276L657,275L659,274L660,272L661,274L661,275ZM672,256L672,256L671,256L670,254L671,252L672,252L673,255ZM680,246L679,248L677,247L675,246L677,245L677,244L678,243L681,243L683,241L684,240L685,242L683,242L681,245L680,245ZM678,248L678,249L676,248L676,247L677,247ZM859,149L858,149L858,148L860,148ZM129,728L133,733L134,734L137,737L136,738L136,743L135,744L133,743L132,743L131,739L129,737L128,737L127,735L126,733L122,729L125,729L126,728L127,727ZM158,784L156,784L153,782L152,781L152,780L149,775L148,774L150,770L153,769L154,770L154,772L156,775L158,778L157,779L160,782L160,784ZM277,782L279,786L279,791L282,796L290,798L289,799L288,800L286,804L287,805L287,807L286,807L284,806L283,805L280,804L276,802L275,801L274,799L275,797L273,795L273,793L272,791L271,790L268,790L265,790L263,790L261,789L261,788L262,787L264,786L265,785L265,784L265,782L267,781L269,780L270,781L271,784L272,782L271,780L273,780L274,780L276,780L276,781ZM564,845L565,844L566,840L566,837L566,833L568,830L570,829L570,830L572,832L572,832L572,836L572,837L571,835L570,836L569,837L569,838L569,839L568,842L569,843L570,843L572,845L572,845L564,845ZM557,845L557,842L559,841L558,840L557,837L558,836L561,835L564,833L565,834L565,839L562,842L563,845L563,845L563,845L557,845ZM316,690L313,691L312,690L315,688L312,687L311,687L310,685L310,684L314,681L315,681L315,682L317,685L317,687ZM314,805L313,808L311,809L310,809L309,808L308,807L307,808L304,809L304,808L303,806L303,804L303,804L304,803L303,802L304,801L305,798L308,797L308,798L312,798L314,800L315,802ZM782,765L786,766L787,766L789,766L790,766L791,766L794,769L796,771L798,772L800,773L798,774L796,775L795,775L793,774L792,774L790,773L790,771L789,768L787,769L785,767L784,767L783,767L783,766ZM784,781L791,782L793,782L797,782L800,783L805,784L807,784L809,785L805,785L804,786L801,786L799,786L797,786L796,786L794,785L791,784L784,782ZM704,754L707,754L707,754L712,756L712,757L712,758L713,759L711,760L711,760L709,759L707,760L706,759L705,758L704,758L701,755L700,755L701,756L702,757L703,759L704,759L705,760L705,761L703,761L702,760L702,759L699,760L698,758L696,758L694,757L695,756L695,755L696,755L697,755L698,755L702,754ZM663,718L660,719L660,718L659,714L661,711L663,709L666,709L667,711L666,715L665,717ZM658,782L656,783L654,783L651,783L648,783L646,783L645,782L645,781L646,779L648,777L649,777L651,777L654,778L658,781ZM622,796L621,796L620,795L620,793L619,792L618,789L619,788L621,788L620,791L622,794ZM621,784L626,785L626,786L620,787L618,787L612,787L611,787L611,786L610,785L611,785L612,785L616,785ZM603,783L605,784L606,783L607,783L607,784L608,784L609,785L609,786L606,786L604,787L601,786L597,788L595,788L593,788L592,786L593,783L595,782L598,782ZM707,776L706,777L704,776L703,775L702,773L701,770L705,769L706,769L707,769L708,770L708,774ZM241,845L238,841L237,841L231,837L230,836L227,833L223,831L216,825L213,822L210,817L209,816L204,812L201,810L200,808L196,802L195,801L193,800L192,798L189,794L188,792L187,791L187,787L181,776L179,773L178,768L173,762L171,761L170,759L168,754L167,753L165,752L161,750L159,749L158,748L157,746L156,742L154,736L152,728L150,724L148,721L139,716L138,715L134,714L133,713L132,711L132,707L131,705L127,702L126,701L125,699L120,692L119,691L117,690L113,689L111,688L109,685L107,683L103,680L96,673L95,671L94,670L93,668L90,662L90,660L90,658L93,656L97,657L99,657L101,658L104,661L106,662L108,663L112,663L112,663L114,664L118,663L120,663L122,663L124,664L128,663L129,663L131,664L133,667L136,669L137,671L138,673L142,677L143,679L142,681L143,683L147,685L149,686L150,687L151,689L153,690L158,692L164,697L168,699L171,702L172,704L173,705L175,708L178,712L180,715L181,716L183,717L184,717L187,719L188,720L188,718L187,717L187,715L188,714L189,714L190,715L194,717L195,719L196,721L197,723L198,724L200,725L201,725L203,726L207,729L209,730L210,732L210,734L211,737L214,739L215,740L217,741L222,741L223,742L225,744L225,745L224,746L220,749L216,750L220,749L222,749L224,748L229,745L230,745L231,745L232,745L236,749L237,751L238,753L236,754L234,755L232,757L231,758L232,758L231,760L233,761L233,762L232,763L232,764L233,767L234,767L237,769L240,771L242,771L245,772L248,772L248,772L249,777L250,781L250,783L250,785L251,787L253,788L255,789L256,790L256,792L255,793L253,795L253,796L252,797L253,798L254,798L257,795L257,795L259,794L264,794L265,795L269,797L274,803L277,807L277,809L276,810L274,812L273,816L273,818L275,820L275,821L273,825L273,825L274,832L274,834L274,836L274,840L273,845L241,845ZM506,845L507,841L509,838L509,836L509,834L510,832L511,830L511,823L511,823L509,819L508,817L509,815L507,814L506,813L504,814L500,815L499,814L498,812L497,810L497,808L497,806L498,804L496,801L496,801L497,799L499,798L502,796L502,795L502,793L503,791L504,789L506,787L506,785L505,782L506,781L505,778L506,775L509,769L511,766L512,765L514,767L515,769L515,767L513,762L512,755L513,755L514,755L514,754L515,753L514,750L514,750L516,746L518,744L518,742L520,740L521,739L522,737L523,737L524,738L524,739L526,740L528,739L529,737L530,736L531,734L532,732L533,731L535,731L536,731L538,732L541,732L542,733L543,735L545,735L549,735L554,736L559,736L561,737L563,737L565,739L567,739L568,738L570,737L574,738L584,739L585,739L591,736L593,733L595,732L596,731L597,730L599,729L600,728L601,726L603,724L605,725L606,725L607,728L605,730L604,733L603,735L602,736L602,736L598,739L596,742L595,744L594,746L591,747L588,747L582,748L578,748L574,748L572,746L570,745L567,745L557,745L553,746L549,746L547,746L545,745L542,745L535,746L533,746L529,745L527,745L525,745L523,746L521,749L519,751L519,753L517,757L517,759L518,761L519,765L521,769L522,769L525,770L526,772L528,775L529,777L531,777L533,777L535,778L537,777L538,775L539,773L542,770L543,768L544,768L545,768L547,770L549,770L551,770L553,769L555,767L557,767L561,767L563,767L567,767L567,766L566,765L569,764L572,763L574,764L575,765L576,766L576,767L576,770L575,771L574,771L573,771L572,769L570,769L567,769L566,770L564,772L563,774L560,777L557,779L556,780L554,781L549,783L548,784L547,786L546,786L544,787L541,785L541,786L540,787L541,788L543,789L544,791L547,792L549,794L551,797L552,799L553,801L557,804L557,806L558,808L559,809L557,810L557,812L556,814L556,816L557,817L559,818L561,820L562,821L562,822L564,824L565,824L566,824L566,824L567,825L567,827L567,829L567,829L566,829L564,829L564,830L560,830L555,831L554,832L553,833L553,836L552,837L550,837L547,837L545,836L543,834L543,833L544,828L545,825L545,824L544,823L542,822L540,821L533,815L533,814L533,812L535,809L536,806L535,801L534,800L532,799L530,799L529,800L527,801L523,803L522,805L522,806L522,808L523,810L524,811L525,818L525,818L524,820L523,824L524,830L524,833L524,835L523,839L522,843L523,845L506,845ZM338,719L337,721L337,723L339,723L339,726L342,729L343,730L346,732L347,733L350,736L354,739L355,739L361,736L364,736L367,736L370,736L371,737L373,736L375,736L376,736L378,734L381,734L382,731L383,729L384,728L388,727L396,727L396,727L397,729L398,729L403,731L404,731L405,731L407,732L410,731L412,729L414,729L416,729L419,728L420,728L423,729L423,728L425,726L425,725L426,722L428,721L428,720L427,718L427,716L427,715L430,713L434,711L434,709L432,708L433,706L433,705L433,704L435,701L436,702L439,701L440,700L439,698L440,696L441,694L441,693L440,691L441,689L441,686L443,681L445,680L445,679L447,679L449,680L451,678L454,678L455,679L457,678L458,679L460,678L463,679L467,679L470,679L473,681L475,682L474,682L474,683L475,685L475,686L478,688L479,690L478,691L476,691L474,689L474,690L473,691L468,691L466,691L468,692L471,695L472,696L471,698L472,699L473,699L474,700L475,700L476,701L476,703L475,703L478,704L477,705L479,706L479,708L481,710L483,713L484,714L484,715L482,716L481,718L479,719L480,720L482,721L484,724L491,729L494,731L497,735L499,736L500,737L498,738L496,739L492,740L488,739L486,739L484,738L483,736L481,735L482,737L482,738L481,739L478,741L475,748L475,750L474,757L474,759L475,763L475,765L475,766L475,767L470,770L468,771L466,774L464,775L463,775L462,774L461,772L461,773L462,775L461,777L459,778L458,779L458,780L457,782L454,783L453,784L456,784L456,787L456,789L454,791L456,791L457,792L458,793L457,797L456,797L454,797L454,798L454,799L455,798L455,800L454,803L453,805L452,805L451,804L451,806L453,808L451,809L451,809L449,811L449,813L448,814L448,816L435,821L426,826L425,825L424,818L423,814L423,812L421,814L421,814L419,812L419,812L420,809L418,812L417,812L415,810L413,812L410,813L409,813L407,813L407,810L407,809L406,808L402,810L397,804L396,809L392,811L390,812L387,812L384,811L381,812L379,815L378,815L376,815L376,811L376,806L375,804L374,803L373,805L371,805L368,804L367,805L363,806L361,807L360,806L359,805L359,804L360,804L359,804L357,806L356,805L355,804L351,804L350,805L349,804L349,800L347,792L347,788L346,787L344,786L344,784L345,782L345,780L345,778L345,776L344,774L341,771L339,770L335,769L333,769L332,768L332,766L334,765L332,764L330,762L330,761L330,758L330,756L331,754L332,753L331,752L329,749L327,747L326,744L326,740L326,738L327,734L328,733L330,732L328,732L329,729L329,728L330,726L332,724L333,722L334,720ZM651,739L652,739L653,739L654,739L655,736L656,734L658,734L658,731L659,730L663,727L664,727L667,727L667,727L667,728L668,730L667,735L667,735L664,737L660,739L660,740L660,741L662,743L666,744L666,745L667,746L667,747L668,748L669,748L671,750L665,748L663,747L659,747L657,746L655,746L654,746L653,749L654,750L653,753L655,758L657,762L660,766L663,769L660,769L659,767L656,766L655,765L653,761L653,760L651,759L650,758L650,756L650,755L650,751L650,749L649,747L647,745L647,743L647,742L648,740L648,739L647,738L645,734L645,732L647,728L647,727L648,724L649,722L651,720L653,717L656,716L656,717L654,720L653,722L654,723L655,724L656,728L655,731L653,734L649,736L649,738ZM685,803L689,805L691,805L695,805L696,805L700,808L700,809L701,812L703,813L704,815L704,820L700,818L694,815L690,814L689,812L687,811L683,811L681,811L681,813L680,813L678,812L676,812L674,811L672,811L672,810L670,809L668,811L666,813L664,813L662,813L660,810L658,808L657,808L657,809L656,811L654,814L654,814L654,811L653,809L657,804L659,803L665,803L669,803L671,803L672,802L673,803L674,804L674,804L675,804L677,803L680,802L681,802L683,802ZM636,807L638,808L640,810L642,812L642,814L642,816L639,817L637,819L634,819L633,820L628,818L624,816L622,813L621,812L621,808L622,807L624,808L626,807L630,807L635,807ZM824,845L823,844L816,840L815,839L814,840L812,839L811,839L809,838L808,838L804,837L800,835L797,834L795,833L793,832L788,831L784,830L779,830L772,826L770,824L771,822L774,822L772,821L771,821L769,822L768,822L765,821L763,822L762,821L761,819L759,820L758,820L757,818L754,815L753,814L753,811L753,810L755,808L756,806L755,806L753,807L753,809L753,812L752,813L750,813L751,814L750,816L749,818L749,820L748,821L746,824L743,824L741,824L739,823L738,820L737,818L739,815L738,813L737,810L734,808L730,805L729,804L726,804L725,804L724,802L725,801L728,800L730,800L734,801L737,802L740,800L742,797L745,796L746,796L748,797L752,798L753,799L754,798L754,796L756,795L757,795L757,793L755,793L757,791L757,790L754,791L750,792L745,792L741,793L739,793L735,792L733,792L731,792L729,792L728,791L726,789L725,788L724,787L723,783L723,781L719,780L712,778L711,778L709,779L707,778L708,776L710,775L710,774L711,771L711,768L715,767L721,766L722,765L723,764L725,763L726,761L731,760L733,760L735,760L739,761L743,762L746,765L750,766L754,766L756,766L758,766L761,768L760,769L760,771L761,773L762,774L763,776L763,777L762,780L761,782L760,783L761,788L761,790L761,792L762,793L765,799L767,803L767,800L767,798L768,797L769,797L770,800L771,804L772,804L773,804L773,805L773,807L774,810L777,811L780,812L782,812L784,811L787,809L791,805L792,804L793,801L797,798L798,795L800,793L804,792L808,792L812,790L813,789L813,788L813,786L812,785L813,785L817,783L821,781L824,779L826,779L828,780L829,782L839,785L840,785L842,787L843,788L845,788L847,789L849,790L853,792L858,794L860,794L865,794L866,795L867,795L873,796L874,797L875,799L879,799L879,799L879,809L879,813L879,845L824,845ZM202,718L203,719L203,720L202,721L202,723L200,724L198,724L198,723L197,721L197,719L197,718L199,718L201,717ZM214,737L213,737L212,735L211,734L211,730L211,730L213,730L215,732L215,734ZM215,728L215,731L213,729L212,729L210,728L208,728L207,727L208,726L215,728ZM225,741L224,741L224,741L220,740L219,740L216,739L215,738L215,737L216,735L216,734L218,735L220,737L223,738L224,739ZM227,739L226,739L226,739L222,736L219,735L219,734L221,734L224,735L225,736ZM229,744L227,744L227,744L227,743L227,742L228,742L229,743ZM232,742L232,742L230,740L231,739L232,740L233,741ZM242,733L243,734L244,734L244,735L242,737L241,736L240,735L241,734L241,734ZM251,733L252,734L253,735L253,736L253,737L251,739L250,739L250,738L249,737L249,736L249,736L246,736L246,735L248,733L249,733L250,733ZM255,757L255,757L256,756L258,758L259,759L258,759L257,759L253,757L251,758L249,757L250,756L251,753L252,754L253,755L254,755ZM250,759L252,762L250,764L249,764L248,765L247,763L246,762L247,760L248,761ZM237,760L235,760L232,760L232,759L234,758L235,758L237,758L237,759ZM340,774L336,776L335,775L335,772L336,771L338,771L340,772L341,773ZM775,773L774,773L773,773L773,772L773,771L774,770L775,771L775,771L776,771ZM642,762L641,763L640,763L640,761L640,758L641,758L643,759L642,759L643,760ZM648,759L650,762L648,764L649,766L652,766L653,767L653,768L652,768L651,769L649,768L649,767L646,768L646,766L646,765L645,764L643,762L644,760L644,759L644,759L646,761L647,759ZM660,817L659,818L658,818L658,817L656,818L655,819L654,818L654,817L655,816L657,816L660,814L661,814L660,816ZM635,684L634,684L633,684L633,683L634,682L635,680L634,680L633,679L633,677L634,675L635,675L636,676L636,678L637,680L635,682ZM615,694L614,695L612,694L612,692L611,690L612,689L613,690ZM696,783L696,784L697,785L697,786L696,786L697,788L695,788L694,789L692,789L691,789L688,788L685,786L685,786L690,784L692,783L693,784ZM209,845L210,845L210,845L210,845L209,845ZM180,809L180,811L178,809L178,807L177,806L176,805L176,802L177,802L180,805L180,807ZM176,801L175,802L173,802L172,801L172,799L172,799L173,797L176,800ZM170,794L170,795L167,793L166,793L164,791L165,789L166,788L167,789L168,791L169,793ZM146,763L145,764L143,763L144,762L144,760L145,759L145,758L143,754L145,754L146,757L147,758L147,760ZM111,713L110,713L109,713L108,712L104,709L102,709L101,708L100,708L99,706L99,705L100,704L100,703L102,704L103,706L105,706L107,708L111,710L111,712ZM549,845L548,844L549,843L550,842L549,842L551,841L552,842L552,843L553,844L553,845L549,845ZM573,774L573,775L572,776L573,778L575,775L576,775L578,776L578,777L578,779L577,779L575,780L575,779L574,778L573,781L572,782L571,780L572,779L572,776L571,777L569,780L567,781L566,778L566,776L567,774L568,774L572,774ZM549,761L550,761L550,762L549,762L547,762L546,763L546,762L547,761ZM454,820L450,824L449,823L450,820L449,817L449,816L449,813L450,811L453,810L453,812L453,813L453,815L454,818L454,819L453,820ZM231,736L232,737L230,736L230,735L231,734ZM238,740L239,740L237,739L237,738ZM246,739L244,740L243,738L243,737L244,738L245,738ZM253,753L253,753L252,752L250,750L251,750ZM281,699L281,700L280,700L279,698L281,698ZM272,704L271,704L271,701L273,702L273,704ZM326,704L325,704L324,704L326,702ZM327,782L325,782L324,781L325,780L327,781ZM301,804L301,804L300,803L300,803L302,803ZM291,806L290,806L289,804L290,804L292,804ZM126,718L126,718L125,716L123,715L123,715L126,716L126,717ZM92,653L92,654L91,653L90,652L90,652L92,652ZM579,783L578,783L577,783L577,780L578,780L579,781L580,782ZM573,825L571,827L570,827L569,825L568,823L569,822L573,823L573,823ZM584,787L584,788L583,788L582,786ZM572,785L570,786L570,786L571,784L571,784ZM477,682L478,682L481,681L481,684L478,685L476,683ZM477,697L477,698L475,696L475,695L475,694L476,694L477,695ZM578,845L579,844L580,845L580,845L580,845L578,845ZM456,813L455,816L454,815L455,813L456,812ZM644,740L644,741L643,740L643,739L644,739ZM765,790L765,791L765,789L766,789ZM751,827L752,828L750,827L747,826L747,825L749,826ZM705,767L705,768L704,769L697,770L698,768L701,768L702,768L704,768L704,767ZM700,763L699,763L698,762L700,761L701,762ZM682,757L681,757L681,756L679,755L678,753L682,756ZM646,754L646,754L645,753L645,751ZM645,743L644,743L645,741L646,741ZM643,767L643,767L641,767L642,764L642,764ZM668,815L667,816L666,816L665,814ZM665,816L662,816L663,814L664,815ZM633,687L633,688L632,686L632,684L633,685L633,686ZM635,689L634,688L635,687L635,688ZM611,708L610,708L610,706L610,705L611,706L610,707ZM655,804L654,806L652,805ZM648,811L649,812L647,811L646,810L647,810ZM-5,276L-4,276L2,275L4,273L6,272L10,274L13,274L20,274L22,274L25,272L25,272L26,274L29,274L30,273L33,273L34,273L35,272L36,270L34,268L35,266L36,264L34,261L34,261L32,261L30,261L29,260L27,259L27,258L28,255L30,255L33,256L34,256L36,254L39,254L40,254L42,254L44,253L46,251L46,250L46,249L47,248L50,246L52,244L54,243L55,239L56,238L58,238L63,237L67,235L69,233L69,232L71,231L74,228L77,227L80,225L82,226L82,227L86,228L86,228L89,229L91,230L92,230L93,230L95,228L95,227L98,225L101,223L104,222L106,223L107,225L107,226L109,226L109,227L108,228L106,229L106,233L109,230L111,230L112,230L112,232L113,235L110,239L109,240L109,241L108,242L110,243L111,242L114,241L115,242L117,243L120,244L122,243L123,244L126,246L126,249L127,250L126,252L126,252L125,253L120,256L119,257L119,258L119,261L122,267L122,268L121,268L119,266L117,264L116,263L115,263L108,264L105,266L102,269L99,271L94,275L91,276L90,277L88,278L87,280L87,282L87,285L88,288L86,291L86,294L84,297L83,298L80,299L80,300L79,304L79,305L81,306L81,307L80,310L79,313L76,317L74,321L72,328L71,330L70,330L69,329L66,328L63,327L63,327L60,328L60,327L58,326L57,327L58,331L59,333L59,336L58,344L57,345L56,346L55,345L55,348L53,351L54,354L55,358L54,360L53,361L52,362L51,365L50,365L49,364L48,363L46,362L45,364L44,365L44,364L44,357L43,355L43,352L41,348L41,347L40,345L40,340L39,337L39,333L38,333L37,332L35,333L33,333L33,337L33,337L31,339L30,341L31,344L30,345L29,346L28,346L27,346L26,345L25,342L24,342L24,345L23,344L22,339L20,335L20,334L21,329L23,327L24,325L26,325L27,325L29,324L31,323L32,324L32,324L34,320L36,320L36,319L36,318L38,314L38,312L38,311L39,310L41,311L42,311L43,310L43,309L41,308L38,306L35,305L30,305L25,306L22,305L18,305L13,305L10,305L8,305L4,305L0,303L-3,303L-3,301L-3,298L-3,292L-3,290L-5,286L-5,286L-5,276ZM67,636L66,637L64,633L63,632L63,630L64,629L66,629L67,629L68,633ZM64,626L63,628L62,627L62,626L64,626ZM54,611L55,612L54,611L53,610L53,609ZM59,617L58,617L57,616L57,615L58,615L59,616ZM61,614L60,615L60,612L60,611L61,612L61,612ZM48,595L47,596L47,594L48,594L48,595ZM43,571L43,571L41,571L41,569L41,567L41,566L42,565L43,565L44,566L44,568ZM46,556L46,556L45,556L45,555L46,554L46,555ZM47,553L46,553L44,550L44,548L44,547L44,546L45,546L46,543L46,541L48,541L48,540L47,539L47,536L48,533L47,531L48,530L49,528L48,527L49,523L49,521L50,519L52,518L53,518L53,520L52,522L53,523L52,525L52,526L51,526L50,529L51,530L52,536L51,537L49,538L50,541L49,542L47,545L48,547L48,549L48,552ZM52,545L53,547L51,545ZM47,530L46,531L46,529L47,528ZM486,318L485,319L484,319L484,318L485,317ZM549,181L548,182L543,180L540,178L538,176L538,175L540,175L542,176L543,177L544,178L548,180ZM557,212L557,212L554,211L552,211L551,210L551,208L554,208L557,210L557,210ZM555,217L555,218L552,216L553,216L554,215ZM559,213L558,214L557,212L559,212ZM514,300L513,300L512,300L512,298L512,297L512,296L513,296L514,297L514,299ZM351,381L352,382L354,382L354,382L354,384L352,383L350,383L349,383L350,382ZM539,249L537,249L537,248L538,246L539,248ZM406,350L406,351L405,349L404,349L403,348L405,348ZM393,372L393,372L392,370L393,369L394,369L393,370ZM390,371L388,372L389,371L390,370ZM596,-5L594,-4L593,-2L592,0L592,0L591,2L588,4L582,4L580,3L579,5L577,5L575,5L573,7L570,7L568,9L566,9L557,14L556,16L554,19L551,21L549,22L547,22L546,22L545,23L546,25L546,25L543,26L540,27L537,28L537,27L536,24L539,23L546,20L545,17L546,16L549,14L548,13L543,14L539,14L540,12L539,10L541,8L543,8L543,7L543,6L543,3L548,1L549,-1L551,-3L553,-5L596,-5ZM525,-5L524,-5L515,0L510,2L507,6L504,10L504,13L501,17L498,19L496,19L494,18L491,20L488,21L485,18L483,17L480,18L479,19L476,26L475,29L475,31L477,35L479,38L483,40L492,42L494,42L497,42L499,43L500,46L501,49L502,51L500,52L499,55L499,59L500,60L502,62L505,63L508,63L513,63L515,61L515,59L520,55L523,53L522,51L524,51L530,48L535,50L538,53L541,54L543,55L546,56L549,56L551,56L553,55L554,55L555,56L558,57L560,57L562,57L563,57L562,59L562,62L561,63L559,65L561,66L561,67L558,70L556,69L555,68L555,67L553,67L551,67L546,70L542,72L537,73L535,74L534,75L532,74L531,74L531,75L532,76L533,78L532,78L531,78L530,79L529,80L529,84L528,85L526,85L524,86L523,85L523,84L523,83L520,83L519,85L520,87L522,87L522,88L521,89L518,91L517,93L515,95L512,96L511,99L509,101L507,102L506,106L504,108L503,112L503,114L506,114L507,115L510,118L513,119L517,120L521,123L522,124L523,126L525,132L526,136L526,137L528,140L530,145L532,150L533,154L532,155L532,157L534,159L540,161L541,163L541,167L543,168L546,170L547,171L549,173L549,177L546,177L541,174L539,174L537,174L534,173L531,170L529,169L526,169L520,171L519,171L518,172L521,173L523,172L526,170L530,171L531,174L533,176L535,176L538,178L541,181L546,185L548,188L549,190L550,193L548,194L544,194L542,195L540,197L534,200L533,203L531,204L528,203L525,203L521,205L521,206L522,206L523,206L526,205L528,208L533,208L537,205L539,205L540,205L542,207L546,211L548,212L551,213L553,214L550,215L546,219L544,220L543,221L546,221L549,219L550,218L551,219L551,221L550,228L549,228L548,226L547,226L546,226L544,226L542,228L543,228L546,231L546,232L546,232L544,232L546,234L545,235L543,236L543,238L544,240L545,243L545,245L543,244L541,246L539,246L538,244L536,245L535,247L534,250L533,250L530,250L532,252L532,253L529,255L529,257L527,259L528,261L528,262L527,264L524,267L522,268L520,272L519,274L519,276L517,278L515,277L515,276L515,276L514,274L514,273L513,274L512,275L510,274L510,275L511,277L512,277L514,279L515,282L515,283L512,285L510,287L508,288L505,288L504,287L502,287L505,290L506,290L507,290L509,289L511,289L511,291L511,293L510,295L509,297L511,300L510,301L509,300L507,299L506,300L505,299L503,300L502,300L503,301L504,302L505,304L504,304L500,304L500,304L499,306L499,308L498,310L497,310L495,311L494,311L494,312L495,313L494,315L492,316L490,316L488,316L486,315L484,315L483,317L483,318L480,318L481,320L483,320L484,321L484,323L481,325L480,327L478,327L477,328L476,330L475,330L474,330L473,331L474,332L473,334L472,335L471,333L471,333L469,334L468,335L467,335L466,334L464,334L463,338L461,339L459,339L460,340L460,341L460,342L458,342L458,343L457,346L456,347L454,347L453,346L452,348L451,348L449,348L446,350L442,349L441,349L440,351L438,351L434,349L433,350L431,351L430,352L429,353L427,353L426,351L425,351L424,352L423,353L423,355L422,355L421,354L420,354L418,355L416,354L414,355L413,355L411,353L410,351L408,350L407,349L407,346L407,344L405,344L404,345L404,346L404,347L402,348L403,349L404,350L404,351L406,354L406,357L407,358L406,360L406,360L405,361L402,362L401,363L399,363L398,361L397,362L396,366L395,367L393,366L391,367L389,369L388,368L387,367L387,365L385,365L386,368L385,369L383,369L380,368L378,367L378,369L377,370L375,370L374,372L372,373L369,373L368,374L366,374L364,374L362,374L362,375L360,376L358,376L356,378L355,379L354,379L353,379L352,377L352,377L351,380L351,381L348,382L348,384L348,386L351,386L352,387L350,388L350,389L354,392L354,393L353,395L351,396L347,397L344,396L343,395L343,394L345,394L344,393L342,392L341,390L341,389L340,386L339,385L340,382L339,381L341,379L341,377L343,376L344,374L342,374L341,373L340,373L339,373L338,371L337,370L337,373L335,374L334,375L330,375L329,375L330,373L329,372L328,372L324,372L321,369L321,368L321,367L321,367L319,366L319,370L319,371L319,371L318,372L317,371L316,370L316,372L315,373L313,373L312,373L310,374L310,374L307,371L306,371L304,372L301,372L301,371L299,372L298,370L296,370L293,368L293,367L291,366L288,365L287,365L287,360L287,359L285,358L285,357L285,355L286,354L287,354L288,353L289,350L287,348L285,348L282,349L280,348L279,347L278,347L276,346L275,347L273,347L271,345L268,345L267,343L265,340L263,340L262,341L256,343L256,344L255,348L253,349L250,350L248,352L247,351L245,350L244,350L242,351L241,354L240,355L235,350L234,351L233,353L232,354L230,351L229,350L229,351L227,354L226,355L224,356L223,356L221,354L219,353L216,351L214,351L213,353L211,356L209,358L207,356L206,356L204,357L203,356L201,356L200,359L199,360L199,362L199,362L200,365L202,367L202,368L203,372L202,376L202,377L204,379L202,380L200,380L199,379L197,379L195,380L194,379L193,377L193,376L193,374L192,373L192,372L192,370L191,369L187,371L184,374L182,375L178,374L176,375L175,374L174,373L174,371L172,370L171,368L172,365L171,364L165,363L162,363L160,363L159,362L158,361L159,358L161,355L161,352L162,349L164,347L163,345L161,344L159,344L156,344L153,342L153,339L152,336L152,334L151,332L150,330L150,329L150,328L152,325L152,325L151,325L148,326L147,325L144,325L142,325L138,326L135,327L134,328L132,329L130,329L131,327L133,325L133,323L132,321L132,320L131,319L130,319L130,318L130,315L131,313L133,311L133,311L133,309L133,308L135,303L137,304L138,303L140,300L140,297L141,297L143,297L144,297L145,295L146,293L148,293L149,292L149,292L149,291L148,289L148,288L148,287L149,286L150,285L150,283L150,281L151,278L151,274L150,269L150,266L150,265L150,262L149,259L147,257L145,257L144,259L143,259L142,257L140,251L140,248L138,246L137,244L136,243L134,243L133,241L132,241L130,240L128,244L126,246L123,244L122,243L120,244L117,243L115,242L114,241L111,242L110,243L108,242L109,241L109,240L110,239L113,235L112,232L112,230L111,230L109,230L106,233L106,229L108,228L109,227L109,226L107,226L107,225L106,223L104,222L101,223L98,225L95,227L95,228L93,230L92,230L91,230L89,229L86,228L86,228L82,227L82,226L80,225L77,227L74,228L71,231L69,232L69,233L67,235L63,237L58,238L56,238L55,239L54,243L52,244L50,246L47,248L46,249L46,250L46,251L44,253L42,254L40,254L39,254L36,254L34,256L33,256L30,255L28,255L28,252L28,251L24,250L22,249L21,249L19,251L18,251L16,250L12,249L11,249L8,249L6,249L6,248L6,246L6,246L2,245L0,244L-2,245L-3,245L-4,247L-5,247L-5,-5ZM360,402L362,404L362,408L361,409L359,410L356,415L355,417L355,418L354,420L353,424L352,425L349,426L348,428L346,429L346,430L345,431L344,430L342,431L341,432L340,433L337,434L333,433L331,432L328,431L326,431L322,428L322,424L321,422L322,415L322,414L324,412L326,411L329,409L331,408L332,406L331,406L331,404L333,403L335,404L336,403L338,402L339,402L343,402L346,402L348,401L351,401L352,402L352,401L355,402L355,400L356,399L357,399L359,401ZM405,361L406,360L406,361ZM414,355L416,354L418,355L419,356L420,357L419,358L418,359L416,358L414,358L413,358L412,357L414,356ZM418,361L417,361L416,360L417,359L418,360ZM414,361L412,361L411,360L412,359L415,358L414,360ZM225,558L224,558L224,556L225,556ZM230,568L229,568L228,567ZM302,497L302,498L301,502L299,503L299,508L299,509L300,510L302,516L303,518L304,520L303,524L301,527L301,529L302,533L303,536L302,538L302,539L300,541L299,540L298,540L296,540L294,542L292,544L289,544L288,546L284,546L283,546L283,551L282,551L278,550L276,549L275,551L273,552L273,553L273,554L273,558L274,559L278,561L279,563L278,564L279,566L278,566L275,565L273,565L272,563L271,563L265,564L264,566L261,565L259,564L259,565L260,567L256,571L255,571L251,571L249,573L249,573L246,571L240,570L239,569L239,570L236,571L233,570L233,569L234,568L236,567L237,565L235,562L233,560L232,561L231,563L230,564L229,564L227,564L226,562L226,559L226,555L224,552L224,550L223,549L223,550L220,544L219,541L220,538L218,535L215,533L215,531L215,527L213,524L213,522L212,518L213,518L216,517L217,516L216,516L218,515L219,513L222,509L223,507L225,505L228,504L232,503L234,502L234,502L237,503L238,503L242,503L245,503L248,503L251,503L255,502L257,503L258,503L258,505L259,506L260,506L262,504L262,505L263,506L265,508L265,508L268,507L271,508L273,510L274,511L277,511L278,509L278,508L276,505L276,504L276,503L279,503L279,503L280,501L282,502L284,501L285,500L286,501L289,503L290,504L292,504L294,502L295,502L297,501L298,499L300,500L300,500L301,498ZM175,396L172,394L171,394L169,395L166,396L163,395L164,398L163,399L161,400L160,400L159,399L156,400L156,401L155,404L154,406L151,406L146,407L142,407L140,406L138,406L138,408L136,409L135,411L134,415L135,418L133,420L133,421L134,427L133,428L132,428L129,429L127,429L128,432L130,433L132,433L132,435L133,437L133,439L133,441L134,444L137,447L141,452L142,453L145,457L146,458L146,461L148,465L149,468L150,469L152,467L153,468L153,470L152,471L148,473L148,478L147,482L148,485L147,486L146,486L144,487L143,487L141,488L141,489L141,492L142,495L146,501L148,503L150,506L154,509L155,511L158,515L158,519L158,523L157,526L157,527L158,528L158,530L159,532L162,536L162,537L163,542L164,544L166,549L165,551L163,552L161,556L158,561L156,564L153,567L151,568L151,569L151,571L151,573L150,577L149,577L148,580L146,577L147,574L146,569L147,567L150,563L150,560L151,559L151,557L151,554L151,552L152,551L153,550L152,549L150,550L149,550L149,549L149,547L150,546L150,544L149,543L150,541L148,541L149,540L150,539L149,537L149,536L149,534L149,532L149,530L148,528L148,525L146,522L145,519L142,515L142,511L141,510L141,516L140,515L140,512L139,510L140,507L138,504L138,502L136,498L137,497L138,498L137,496L136,497L135,495L134,489L133,487L134,484L133,476L131,474L132,470L132,466L132,465L133,464L131,464L127,465L126,462L125,461L124,458L124,455L124,454L122,453L120,450L118,449L119,451L118,452L119,456L118,458L117,460L117,461L114,464L112,465L111,465L110,465L108,463L108,460L107,460L108,463L108,464L109,466L108,467L106,468L104,468L104,470L99,471L98,473L98,475L96,477L93,479L91,478L92,476L92,474L92,472L92,474L90,476L89,477L88,477L85,477L84,475L84,473L84,471L84,474L83,475L80,476L80,473L81,472L81,470L81,467L81,465L80,468L79,469L78,471L77,472L74,474L73,474L73,472L74,465L75,464L75,463L76,459L77,457L77,454L79,451L79,446L79,444L78,441L76,434L74,429L73,427L72,425L73,425L71,423L70,422L70,417L70,415L69,417L68,417L68,420L68,422L66,421L64,419L62,416L60,413L62,413L64,415L66,416L68,414L69,412L68,411L66,410L65,409L64,407L62,406L64,403L62,403L58,401L56,400L54,401L55,403L55,404L54,404L52,400L53,398L52,398L53,395L52,394L52,396L50,399L48,398L50,395L49,394L48,393L47,391L47,391L47,393L47,396L45,393L41,388L40,387L39,383L39,382L38,381L38,378L38,377L39,375L40,375L41,376L44,377L44,378L45,378L45,375L45,372L45,366L44,365L45,364L46,362L48,363L49,364L50,365L51,365L52,362L53,361L54,360L55,358L54,354L53,351L55,348L55,345L56,346L57,345L58,344L59,336L59,333L58,331L57,327L58,326L60,327L60,328L63,327L63,327L66,328L69,329L70,330L71,330L72,328L74,321L76,317L79,313L80,310L81,307L81,306L79,305L79,304L80,300L80,299L83,298L84,297L86,294L86,291L88,288L87,285L87,282L87,280L88,278L90,277L91,276L94,275L99,271L102,269L105,266L108,264L115,263L116,263L117,264L119,266L121,268L122,268L122,267L119,261L119,258L119,257L120,256L125,253L126,252L126,252L127,250L126,249L126,246L128,244L130,240L132,241L133,241L134,243L136,243L137,244L138,246L140,248L140,251L142,257L143,259L144,259L145,257L147,257L149,259L150,262L150,265L150,266L150,269L151,274L151,278L150,281L150,283L150,285L149,286L148,287L148,288L148,289L149,291L149,292L149,292L148,293L146,293L145,295L144,297L143,297L141,297L140,297L140,300L138,303L137,304L135,303L133,308L133,309L133,311L133,311L131,313L130,315L130,318L130,319L131,319L132,320L132,321L133,323L133,325L131,327L130,329L132,329L134,328L135,327L138,326L142,325L144,325L147,325L148,326L151,325L152,325L152,325L150,328L150,329L150,330L151,332L152,334L152,336L153,339L153,342L156,344L159,344L161,344L163,345L164,347L162,349L161,352L161,355L159,358L158,361L159,362L160,363L162,363L165,363L171,364L172,365L171,368L172,370L174,371L174,373L175,374L176,375L178,374L182,375L184,374L187,371L191,369L192,370L192,372L192,373L191,375L188,376L187,377L185,377L185,379L184,381L183,382L182,382L181,385L182,385L183,385L182,386L181,387L179,386L178,387L177,388L176,391ZM142,564L143,567L142,567L142,566L141,565L139,565L141,563ZM141,582L140,582L140,581L142,580L143,579L143,580L142,581ZM142,554L141,555L141,553L143,549L143,550L142,554ZM147,547L146,547L146,544L146,544L147,545L148,546ZM147,550L147,553L145,553L144,549L147,549ZM145,535L146,535L146,537L144,539L143,539L144,536L143,534L143,533L145,534ZM140,543L139,542L139,541L139,540L140,541ZM77,475L76,477L76,474L78,473L79,470L80,472L79,474ZM131,470L130,470L129,469L129,466L130,465L131,465L131,466ZM64,426L63,426L62,424L60,422L62,422L65,422L65,423L64,425ZM60,404L61,406L59,405L59,402ZM64,410L66,411L67,411L68,412L68,413L67,414L66,414L65,414L64,412L63,411ZM147,563L146,563L147,561ZM139,551L139,552L138,551L138,548L139,550ZM139,538L138,540L137,539L138,538ZM143,526L143,529L142,527L142,524ZM83,477L82,478L82,477L83,475L83,476ZM52,403L52,405L51,404L50,402L50,400L51,401ZM433,669L435,672L436,674L436,677L437,678L435,679L433,678L431,673L431,669ZM431,669L427,672L427,672L427,677L428,678L427,680L428,680L427,682L426,683L425,684L424,684L423,683L421,680L419,680L419,679L419,678L418,676L415,674L417,674L419,674L421,673L423,672L427,669L428,668L431,667L432,667ZM-5,247L-4,247L-3,245L-2,245L0,244L2,245L6,246L6,246L6,248L6,249L8,249L11,249L12,249L16,250L18,251L19,251L21,249L22,249L24,250L28,251L28,252L28,255L28,255L27,258L27,259L29,260L30,261L32,261L34,261L34,261L36,264L35,266L34,268L36,270L35,272L34,273L33,273L30,273L29,274L26,274L25,272L25,272L22,274L20,274L13,274L10,274L6,272L4,273L2,275L-4,276L-5,276L-5,247ZM-5,286L-5,286L-3,290L-3,292L-3,298L-3,301L-3,303L0,303L4,305L8,305L10,305L13,305L18,305L22,305L25,306L30,305L35,305L38,306L41,308L43,309L43,310L42,311L41,311L39,310L38,311L38,312L38,314L36,318L36,319L36,320L34,320L32,324L32,324L31,323L29,324L27,325L26,325L24,325L23,327L21,329L20,334L20,335L22,339L23,344L24,345L24,342L25,342L26,345L27,346L28,346L29,346L30,345L31,344L30,341L31,339L33,337L33,337L33,333L35,333L37,332L38,333L39,333L39,337L40,340L40,345L41,347L41,348L43,352L43,355L44,357L44,364L44,365L45,366L45,372L45,375L45,378L44,378L44,377L41,376L40,375L39,375L38,377L38,378L38,381L39,382L39,383L40,387L40,387L38,383L35,380L35,374L35,371L33,367L32,362L31,360L32,358L31,359L30,357L29,355L26,351L26,350L25,348L24,350L23,351L21,353L20,353L16,354L14,351L11,346L11,344L11,341L11,338L10,335L10,336L10,338L7,338L5,337L7,339L9,339L10,341L10,343L8,345L8,346L10,348L8,348L7,351L9,353L8,354L10,357L11,358L10,360L6,364L5,367L4,368L3,368L1,367L2,364L4,362L1,363L-1,364L-2,361L-2,359L0,356L-2,357L-3,359L-2,361L-3,363L-3,365L-4,366L-5,367L-5,286ZM20,361L18,363L19,355L20,358L20,359ZM27,358L26,358L25,358L24,356L25,354L25,353L26,356ZM13,363L10,364L9,363L12,359L12,356L11,355L10,353L10,352L9,351L9,349L10,349L12,349L12,351L13,353L15,356L15,357L14,362ZM32,368L32,369L31,368L32,366ZM34,374L33,374L32,373L32,373L32,370L33,370L34,372ZM11,347L11,348L10,346L9,346L10,345Z","bord":"M249,573L249,573L251,571L255,571L256,571L260,567L259,565L259,564L261,565L264,566L265,564L271,563L272,563L273,565L275,565L278,566L279,566L278,564L279,563L278,561L274,559L273,558L273,554L273,553L273,552L275,551L276,549L278,550L282,551L283,551L283,546L284,546L288,546L289,544L292,544L294,542L296,540L298,540L299,540L300,541L302,539L302,538L303,536L302,533L301,529L301,527L303,524L304,520L303,518L302,516L300,510L299,509L299,508L299,503L301,502L302,498L302,497L302,495L302,494L301,492L302,492L303,491L304,489L304,487L303,485L299,482L298,481L296,479L296,478L296,477L299,476L300,474L300,473L298,473L297,472L294,469L292,468L291,467L291,465L290,465L289,466L287,465L286,463L285,462L285,458L285,457L283,456L282,454L281,452L276,449L274,447L272,445L271,443L269,441L269,438L267,435L264,435L261,432L260,430L260,429L261,426L261,426L259,425L254,423L252,422L249,420L243,416L240,415L240,414L242,412L242,411L242,410L242,408L242,408L246,407L251,409L251,409L254,406L255,405L256,403L257,401L257,400L257,398L255,398L253,398L253,397L253,396L252,395L250,394L248,393L248,393L251,391L251,391L251,390L247,387L245,385L243,384L242,384L239,386L238,387L236,388L235,389L232,387L228,386L226,385L222,379L222,378L222,375L223,373L223,371L221,370L221,368L220,370L219,371L218,370L217,367L217,366L215,365L215,364L212,361L210,359L209,358L211,356L213,353L214,351L216,351L219,353L221,354L223,356L224,356L226,355L227,354L229,351L229,350L230,351L232,354L233,353L234,351L235,350L240,355L241,354L242,351L244,350L245,350L247,351L248,352L250,350L253,349L255,348L256,344L256,343L262,341L263,340L265,340L267,343L268,345L271,345L273,347L275,347L276,346L278,347L279,347L280,348L282,349L285,348L287,348L289,350L288,353L287,354L286,354L285,355L285,357L285,358L287,359L287,360L287,365L288,365L291,366L293,367L293,368L296,370L298,370L299,372L301,371L301,372L304,372L306,371L307,371L310,374M150,577L151,573L151,571L151,569L151,568L153,567L156,564L158,561L161,556L163,552L165,551L166,549L164,544L163,542L162,537L162,536L159,532L158,530L158,528L157,527L157,526L158,523L158,519L158,515L155,511L154,509L150,506L148,503L146,501L142,495L141,492L141,489L141,488L143,487L144,487L146,486L147,486L148,485L147,482L148,478L148,473L152,471L153,470L153,468L152,467L150,469L149,468L148,465L146,461L146,458L145,457L142,453L141,452L137,447L134,444L133,441L133,439L133,437L132,435L132,433L130,433L128,432L127,429L129,429L132,428L133,428L134,427L133,421L133,420L135,418L134,415L135,411L136,409L138,408L138,406L140,406L142,407L146,407L151,406L154,406L155,404L156,401L156,400L159,399L160,400L161,400L163,399L164,398L163,395L166,396L169,395L171,394L172,394L175,396L175,397L177,395L178,394L179,395L180,397L181,398L182,400L180,404L179,406L180,408L181,410L183,411L185,410L187,409L189,409L192,409L193,410L193,411L193,414L194,416L195,418L195,420L193,427L191,429L191,431L192,433L192,435L192,437L188,446L189,446L191,448L193,447L195,445L197,443L199,441L202,440L202,439L203,437L204,437L205,437L206,437L207,435L209,434L209,434L211,435L213,437L215,438L216,439L217,439L217,440L218,441L219,440L221,439L222,438L224,438L225,438L226,436L227,434L229,433L228,432L229,431L230,430L233,430L235,431L238,432L240,433L241,432L242,434L245,438L247,441L249,444L251,445L253,446L254,448L255,451L254,455L254,458L254,463L256,466L258,468L259,470L259,471L261,472L264,473L266,474L265,475L266,477L267,478L268,479L269,480L270,480L269,483L268,485L267,486L267,487L267,490L268,491L268,493L268,495L267,499L267,500L266,501L265,502L262,504L260,506L259,506L258,505L258,503L257,503L255,502L251,503L248,503L245,503L242,503L238,503L237,503L234,502L234,502L232,503L228,504L225,505L223,507L222,509L219,513L218,515L216,516L217,516L216,517L213,518L212,518L213,522L213,524L215,527L215,531L215,533L218,535L220,538L219,541L220,544L223,550M209,646L208,647L208,648L206,650L205,652L205,653L203,654L202,654L201,654L200,652L199,652L194,654L193,656L192,656L189,654L190,653L191,651L191,649L191,647L191,646L189,646L187,646L187,644L186,643L185,642L183,642L178,640L177,638L175,638L174,642M632,49L632,49L632,46L634,45L637,41L638,39L639,38L641,38L643,38L647,38L651,37L654,38L656,38L658,36L659,35L660,33L661,31L662,31M879,845L879,813L879,809L879,799M592,0L593,-2L594,-4L596,-5M475,682L473,681L470,679L467,679L463,679L460,678L458,679L457,678L455,679L454,678L451,678L449,680L447,679L445,679L445,680L443,681L441,686L441,689L440,691L441,693L441,694L440,696L439,698L440,700L439,701L436,702L435,701L433,704L433,705L433,706L432,708L434,709L434,711L430,713L427,715L427,716L427,718L428,720L428,721L426,722L425,725L425,726L423,728L423,729L420,728L419,728L416,729L414,729L412,729L410,731L407,732L405,731L404,731L403,731L398,729L397,729L396,727L396,727L388,727L384,728L383,729L382,731L381,734L378,734L376,736L375,736L373,736L371,737L370,736L367,736L364,736L361,736L355,739L354,739L350,736L347,733L346,732L343,730L342,729L339,726L339,723L337,723L337,721L338,719M415,674L418,676L419,678L419,679L419,680L421,680L423,683L424,684L425,684L426,683L427,682L428,680L427,680L428,678L427,677L427,672L427,672L431,669L431,673L433,678L435,679L437,678L436,677L436,674L435,672L433,669M481,681L478,682L477,682M302,497L301,498L300,500L300,500L298,499L297,501L295,502L294,502L292,504L290,504L289,503L286,501L285,500L284,501L282,502L280,501L279,503L279,503L276,503L276,504L276,505L278,508L278,509L277,511L274,511L273,510L271,508L268,507L265,508L265,508L263,506L262,505L262,504M175,396L176,391L177,388L178,387L179,386L181,387L182,386L183,385L182,385L181,385L182,382L183,382L184,381L185,379L185,377L187,377L188,376L191,375L192,373L193,374L193,376L193,377L194,379L195,380L197,379L199,379L200,380L202,380L204,379L202,377L202,376L203,372L202,368L202,367L200,365L199,362L199,362L199,360L200,359L201,356L203,356L204,357L206,356L207,356L209,358M-5,276L-4,276L2,275L4,273L6,272L10,274L13,274L20,274L22,274L25,272L25,272L26,274L29,274L30,273L33,273L34,273L35,272L36,270L34,268L35,266L36,264L34,261L34,261L32,261L30,261L29,260L27,259L27,258L28,255L30,255L33,256L34,256L36,254L39,254L40,254L42,254L44,253L46,251L46,250L46,249L47,248L50,246L52,244L54,243L55,239L56,238L58,238L63,237L67,235L69,233L69,232L71,231L74,228L77,227L80,225L82,226L82,227L86,228L86,228L89,229L91,230L92,230L93,230L95,228L95,227L98,225L101,223L104,222L106,223L107,225L107,226L109,226L109,227L108,228L106,229L106,233L109,230L111,230L112,230L112,232L113,235L110,239L109,240L109,241L108,242L110,243L111,242L114,241L115,242L117,243L120,244L122,243L123,244L126,246L126,249L127,250L126,252L126,252L125,253L120,256L119,257L119,258L119,261L122,267L122,268L121,268L119,266L117,264L116,263L115,263L108,264L105,266L102,269L99,271L94,275L91,276L90,277L88,278L87,280L87,282L87,285L88,288L86,291L86,294L84,297L83,298L80,299L80,300L79,304L79,305L81,306L81,307L80,310L79,313L76,317L74,321L72,328L71,330L70,330L69,329L66,328L63,327L63,327L60,328L60,327L58,326L57,327L58,331L59,333L59,336L58,344L57,345L56,346L55,345L55,348L53,351L54,354L55,358L54,360L53,361L52,362L51,365L50,365L49,364L48,363L46,362L45,364L44,365L44,364L44,357L43,355L43,352L41,348L41,347L40,345L40,340L39,337L39,333L38,333L37,332L35,333L33,333L33,337L33,337L31,339L30,341L31,344L30,345L29,346L28,346L27,346L26,345L25,342L24,342L24,345L23,344L22,339L20,335L20,334L21,329L23,327L24,325L26,325L27,325L29,324L31,323L32,324L32,324L34,320L36,320L36,319L36,318L38,314L38,312L38,311L39,310L41,311L42,311L43,310L43,309L41,308L38,306L35,305L30,305L25,306L22,305L18,305L13,305L10,305L8,305L4,305L0,303L-3,303L-3,301L-3,298L-3,292L-3,290L-5,286L-5,286M192,373L192,372L192,370L191,369L187,371L184,374L182,375L178,374L176,375L175,374L174,373L174,371L172,370L171,368L172,365L171,364L165,363L162,363L160,363L159,362L158,361L159,358L161,355L161,352L162,349L164,347L163,345L161,344L159,344L156,344L153,342L153,339L152,336L152,334L151,332L150,330L150,329L150,328L152,325L152,325L151,325L148,326L147,325L144,325L142,325L138,326L135,327L134,328L132,329L130,329L131,327L133,325L133,323L132,321L132,320L131,319L130,319L130,318L130,315L131,313L133,311L133,311L133,309L133,308L135,303L137,304L138,303L140,300L140,297L141,297L143,297L144,297L145,295L146,293L148,293L149,292L149,292L149,291L148,289L148,288L148,287L149,286L150,285L150,283L150,281L151,278L151,274L150,269L150,266L150,265L150,262L149,259L147,257L145,257L144,259L143,259L142,257L140,251L140,248L138,246L137,244L136,243L134,243L133,241L132,241L130,240L128,244L126,246M28,255L28,252L28,251L24,250L22,249L21,249L19,251L18,251L16,250L12,249L11,249L8,249L6,249L6,248L6,246L6,246L2,245L0,244L-2,245L-3,245L-4,247L-5,247M418,355L416,354L414,355M406,360L405,361M40,387L39,383L39,382L38,381L38,378L38,377L39,375L40,375L41,376L44,377L44,378L45,378L45,375L45,372L45,366L44,365","P":{"tainan":[522.1,343.9],"taichung":[527.9,323.2],"hsinchu":[534.3,312.4],"tpe":[538.4,306.7],"khh":[523.3,353.8],"pen":[177.2,662.1],"sin":[241.2,730.2],"kumamoto":[703.1,152.8],"pvg":[548.3,188],"nrt":[868.8,92.5],"icn":[628.4,56.1],"hualien":[544.8,327.8],"yongan":[520.7,349.7],"malacca":[182.8,701.9],"sgstrait":[248.3,733],"scs1":[344.8,624],"scs2":[465.5,456.1],"wEdge":[0,650],"bashi":[534.5,386.9],"luzon":[508.6,429]},"labels":[["CHINA",379.3,250.4],["TAIWAN",560.3,353.5],["MALAYSIA",200,701.9],["SINGAPORE",251.7,750.2],["JAPAN",793.1,104.5],["PHILIPPINES",569,527.6],["VIETNAM",281,486.7],["THAILAND",175.9,483.1],["S. KOREA",655.2,83.3],["INDONESIA",379.3,796.8],["South China Sea",405.2,524],["Taiwan Strait",472.4,319.6],["Strait of Malacca",89.7,639.6]],"zones":[[497.4,279.5,25.9,19.2],[556,285.3,25.9,19.1],[566.4,331,25.8,18.7],[531.9,372.1,25.9,18.5],[488.8,351.6,25.9,18.6],[480.2,315.8,25.8,18.9]],"cordon":[534.5,332.8,44.8,55.2],"detour":[[558.6,323.4],[550,372.1]]};
+const LiveMap=(function(){
+  const cv=$('#mapCv'), ctx=cv.getContext('2d'), box=$('#mapBox');
+  const base=document.createElement('canvas'), bctx=base.getContext('2d');
+  const P=MAPD.P, W=MAPD.W, H=MAPD.H;
+  let landP=null,bordP=null; try{landP=new Path2D(MAPD.land);bordP=new Path2D(MAPD.bord)}catch(e){}
+  let k=1,dpr=1,C={},sim=null,simT=-2,speed=1,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,last=0,agents=[],acc={},selected=null,hudAt=0;
+  const WEEK_SEC=2; // seconds per simulated week at 1x
+  const fs=n=>n*Math.max(0.66,Math.min(1,k*1.35))/k; // text size that shrinks a little on small maps
+
+  /* routes: Catmull-Rom through waypoints, sampled for constant-speed travel */
+  function spline(pts){
+    const out=[];
+    for(let i=0;i<pts.length-1;i++){
+      const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+      for(let s=0;s<24;s++){const t=s/24,t2=t*t,t3=t2*t;
+        out.push([0,1].map(j=>0.5*(2*p1[j]+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3)));}
+    }
+    out.push(pts[pts.length-1]);
+    const L=[0];for(let i=1;i<out.length;i++)L.push(L[i-1]+Math.hypot(out[i][0]-out[i-1][0],out[i][1]-out[i-1][1]));
+    return {pts:out,L,len:L[L.length-1]};
+  }
+  function at(r,u){
+    const d=Math.max(0,Math.min(1,u))*r.len;let lo=1,hi=r.L.length-1;
+    while(lo<hi){const m=(lo+hi)>>1;if(r.L[m]<d)lo=m+1;else hi=m}
+    const a=r.pts[lo-1],b=r.pts[lo],s=(d-r.L[lo-1])/((r.L[lo]-r.L[lo-1])||1);
+    return {x:a[0]+(b[0]-a[0])*s,y:a[1]+(b[1]-a[1])*s,ang:Math.atan2(b[1]-a[1],b[0]-a[0])};
+  }
+  const R={
+    wafer:spline([P.tpe,[420,450],[300,585],P.pen]),
+    detour:spline([P.tpe,MAPD.detour[0],MAPD.detour[1],P.bashi,[400,525],[280,615],P.pen]),
+    truck:spline([P.pen,[208,698],P.sin]),
+    am:spline([P.sin,[420,600],[700,470],[1000,430]]),
+    eu:spline([P.sin,[120,690],[0,615]]),
+    pvg:spline([P.sin,[380,455],P.pvg]),
+    icn:spline([P.sin,[455,380],P.icn]),
+    nrt:spline([P.sin,[610,420],P.nrt]),
+    lng:spline([P.wEdge,P.malacca,P.sgstrait,P.scs1,P.scs2,P.yongan]),
+    kum:spline([P.kumamoto,[610,330],[420,525],P.pen]),
+    az:spline([[1000,300],[720,480],[420,610],P.pen])
+  };
+  const [ccx,ccy,crx,cry]=MAPD.cordon;
+  const inCordon=(x,y)=>((x-ccx)/crx)**2+((y-ccy)/cry)**2<1;
+
+  const NODES=[
+    {id:'tw',x:P.tpe[0],y:P.tpe[1],t:'TSMC Taiwan · Taoyuan (TPE)',lx:14,ly:-6,al:'left',d:'TSMC Fab 18 (Tainan) and Fab 15 (Taichung) make the wafers; probe in Hsinchu; lots fly out of Taoyuan (TPE).'},
+    {id:'pen',x:P.pen[0],y:P.pen[1],t:'Penang ATP',lx:11,ly:-6,al:'left',d:'Die bank and assembly. Runs on wafers from Taiwan; goes idle once the die bank and pipeline are used up.'},
+    {id:'sin',x:P.sin[0],y:P.sin[1],t:'Singapore test + Changi DC',lx:12,ly:18,al:'left',d:'Final test, burn-in and the Changi distribution hub holding finished goods. Stock-out starts when it empties.'},
+    {id:'kum',x:P.kumamoto[0],y:P.kumamoto[1],t:'TSMC Kumamoto (JASM)',lx:10,ly:16,al:'left',d:'Second-source option in Japan. Ships only when the pre-qualified second source is switched on.'},
+    {id:'pvg',x:P.pvg[0],y:P.pvg[1],t:'Shanghai',lx:-10,ly:4,al:'right',d:'APAC customer gateway (PVG).'},
+    {id:'icn',x:P.icn[0],y:P.icn[1],t:'Seoul',lx:-10,ly:4,al:'right',d:'APAC customer gateway (ICN).'},
+    {id:'nrt',x:P.nrt[0],y:P.nrt[1],t:'Tokyo',lx:-10,ly:-8,al:'right',d:'APAC customer gateway (NRT).'}
+  ];
+
+  function theme(){
+    ['--sea','--land','--landline','--ink','--ink2','--ink3','--accent','--wafer','--ok','--warn','--crit','--surface','--crit-soft','--warn-soft','--line'].forEach(v=>C[v]=css(v));
+    drawBase();
+  }
+  function size(){
+    const w=box.clientWidth||600; dpr=Math.min(2,window.devicePixelRatio||1); k=w/W;
+    const h=w*H/W;
+    cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+    base.width=cv.width;base.height=cv.height;
+    drawBase(); frame(0,true);
+  }
+  function drawBase(){
+    if(!base.width)return;
+    bctx.setTransform(dpr*k,0,0,dpr*k,0,0);
+    bctx.fillStyle=C['--sea'];bctx.fillRect(0,0,W,H);
+    if(landP){bctx.fillStyle=C['--land'];bctx.fill(landP);bctx.strokeStyle=C['--landline'];bctx.lineWidth=0.8/k;bctx.stroke(landP);
+      bctx.strokeStyle=C['--landline'];bctx.lineWidth=0.6/k;bctx.setLineDash([3/k,3/k]);bctx.stroke(bordP);bctx.setLineDash([]);}
+    bctx.font=`600 ${fs(10)}px Manrope, system-ui, sans-serif`;bctx.fillStyle=C['--ink3'];bctx.textAlign='center';
+    MAPD.labels.filter(l=>!['TAIWAN','SINGAPORE','MALAYSIA','Strait of Malacca'].includes(l[0])).forEach(([n,x,y])=>{if(n==='INDONESIA')x+=70;
+      const sea=/Sea|Strait/.test(n);bctx.font=`${sea?'italic 500':'600'} ${fs(sea?10:9.5)}px Manrope, system-ui, sans-serif`;
+      if(!sea){bctx.save();bctx.fillStyle=C['--ink3'];bctx.globalAlpha=.85;}
+      bctx.fillText(sea?n:n.split('').join(String.fromCharCode(8202)),x,y);if(!sea)bctx.restore();});
+    // static lanes
+    const lane=(r,col,dash)=>{bctx.beginPath();r.pts.forEach((p,i)=>i?bctx.lineTo(p[0],p[1]):bctx.moveTo(p[0],p[1]));bctx.strokeStyle=col;bctx.globalAlpha=.35;bctx.lineWidth=1.4/k;bctx.setLineDash(dash?[4/k,4/k]:[]);bctx.stroke();bctx.setLineDash([]);bctx.globalAlpha=1};
+    ['am','eu','pvg','icn','nrt'].forEach(n=>lane(R[n],C['--accent']));
+    lane(R.wafer,C['--wafer']);
+    if(sim&&sim.alt){lane(R.kum,C['--ok']);lane(R.az,C['--ok']);bctx.font=`500 ${fs(9.5)}px Manrope, system-ui, sans-serif`;bctx.fillStyle=C['--ok'];bctx.textAlign='right';bctx.fillText('From TSMC Arizona →',W-8/k,292);}
+    lane(R.truck,C['--ink2'],true);lane(R.lng,C['--warn'],true);
+    // edge labels
+    bctx.font=`500 ${fs(9.5)}px Manrope, system-ui, sans-serif`;bctx.fillStyle=C['--ink2'];
+    bctx.textAlign='right';bctx.fillText('To Americas (LAX · DFW) →',W-8/k,442);
+    bctx.textAlign='left';bctx.fillText('← To Europe (FRA)',8/k,605);bctx.fillText('← LNG from Qatar via Hormuz',8/k,640);
+  }
+
+  /* ---------- simulation state at a fractional week ---------- */
+  function stateAt(t){
+    if(!sim)return null;
+    const D=sim.D, active=t>0&&t<=D;
+    if(t<=0)return {active:false,tw:1,alt:0,inv:sim.cover,fgL:Math.min(sim.cover,sim.fg),upL:Math.max(0,sim.cover-sim.fg),idle:0,stock:false,lost:0,cancel:0,w:0};
+    const w=Math.min(sim.weeks.length,Math.ceil(t)), r=sim.weeks[w-1];
+    const pr=w>1?sim.weeks[w-2]:{inv:sim.cover,fgL:Math.min(sim.cover,sim.fg),upL:Math.max(0,sim.cover-sim.fg),lost:0,cancel:0};
+    const f=Math.max(0,Math.min(1,t-(w-1))), L=(a,b)=>a+(b-a)*f;
+    return Object.assign({},r,{active,w,inv:L(pr.inv,r.inv),fgL:L(pr.fgL,r.fgL),upL:L(pr.upL,r.upL),lost:L(pr.lost,r.lost),cancel:L(pr.cancel,r.cancel)});
+  }
+
+  /* ---------- agents ---------- */
+  function spawn(kind,route,dur,col,extra){agents.push(Object.assign({kind,route,u:0,dur,col,hold:0},extra||{}))}
+  function step(dtW){
+    const s=stateAt(simT); if(!s)return;
+    const S=sim.S, active=s.active;
+    const rate={ // shipments per simulated week
+      wafer:4*s.tw, alt:4*s.alt, truck:4*(1-s.idle), out:s.stock?6*Math.max(0,s.tw+s.alt):6,
+      lng:active&&S.k==='lng'?0.35:active&&S.k==='block'?0.9:1.1
+    };
+    for(const key in rate){acc[key]=(acc[key]||0)+dtW*rate[key];
+      while(acc[key]>=1){acc[key]-=1;
+        if(key==='wafer')spawn('plane',active&&S.k==='drill'?R.detour:R.wafer,active&&S.k==='drill'?0.85:0.6,'--wafer',{fromTW:true});
+        if(key==='alt')spawn('plane',Math.random()<.5?R.kum:R.az,0.7,'--ok');
+        if(key==='truck')spawn('truck',R.truck,0.45,'--ink2');
+        if(key==='out'){const r=Math.random();spawn('plane',r<.35?R.am:r<.55?R.eu:r<.7?R.pvg:r<.85?R.icn:R.nrt,0.75,'--accent')}
+        if(key==='lng')spawn('ship',R.lng,3.2,'--warn',{toTW:true});
+      }}
+    for(const a of agents){
+      if(a.hold>0){a.hold-=dtW;continue}
+      const p=at(a.route,a.u), nu=a.u+dtW/a.dur, q=at(a.route,nu);
+      // inspection hold (quarantine) and blockade stop at the cordon
+      if(active&&(S.k==='quar'||S.k==='block')){
+        const crossing=a.fromTW?(inCordon(p.x,p.y)&&!inCordon(q.x,q.y)):a.toTW?(!inCordon(p.x,p.y)&&inCordon(q.x,q.y)):false;
+        if(crossing&&!a.checked){a.checked=true;if(S.k==='quar'){a.hold=0.35;a.inspect=true;continue}else{a.blocked=true}}
+      }
+      if(a.blocked){if(active&&S.k==='block')continue;a.blocked=false}
+      a.inspect=false;a.u=nu;
+    }
+    agents=agents.filter(a=>a.u<1);
+  }
+  function reset(){agents=[];acc={};}
+
+  /* ---------- drawing ---------- */
+  function plane(x,y,ang,col,s){
+    ctx.save();ctx.translate(x,y);ctx.rotate(ang);ctx.scale(s,s);ctx.fillStyle=col;ctx.strokeStyle=C['--surface'];ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.moveTo(7,0);ctx.lineTo(2,-1.1);ctx.lineTo(-1,-6);ctx.lineTo(-2.6,-6);ctx.lineTo(-1.2,-1.2);ctx.lineTo(-5,-1);ctx.lineTo(-6.5,-3.2);ctx.lineTo(-7.6,-3.2);ctx.lineTo(-6.6,0);
+    ctx.lineTo(-7.6,3.2);ctx.lineTo(-6.5,3.2);ctx.lineTo(-5,1);ctx.lineTo(-1.2,1.2);ctx.lineTo(-2.6,6);ctx.lineTo(-1,6);ctx.lineTo(2,1.1);ctx.closePath();ctx.stroke();ctx.fill();ctx.restore();
+  }
+  function ship(x,y,ang,col,s){ctx.save();ctx.translate(x,y);ctx.rotate(ang);ctx.scale(s,s);ctx.fillStyle=col;ctx.strokeStyle=C['--surface'];ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(6,0);ctx.lineTo(3,-2.4);ctx.lineTo(-5.5,-2.4);ctx.lineTo(-5.5,2.4);ctx.lineTo(3,2.4);ctx.closePath();ctx.stroke();ctx.fill();
+    ctx.fillStyle=C['--surface'];[-3,-0.5,2].forEach(cx=>{ctx.beginPath();ctx.arc(cx-0.5,0,1,0,7);ctx.fill()});ctx.restore()}
+  function truck(x,y,ang,col,s){ctx.save();ctx.translate(x,y);ctx.rotate(ang);ctx.scale(s,s);ctx.fillStyle=col;ctx.fillRect(-4,-1.8,6,3.6);ctx.fillRect(2.4,-1.5,2,3);ctx.restore()}
+  function gauge(x,y,label,val,max,col){
+    const w=fs(64),h=fs(6);ctx.fillStyle=C['--surface'];ctx.strokeStyle=C['--line'];ctx.lineWidth=1/k;
+    ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.fillStyle=col;ctx.fillRect(x,y,w*Math.max(0,Math.min(1,val/max)),h);
+    ctx.font=`500 ${fs(9.5)}px Manrope, system-ui, sans-serif`;ctx.fillStyle=C['--ink2'];ctx.textAlign='left';ctx.fillText(`${label} ${val.toFixed(1)} wks`,x,y-3/k);
+  }
+  function frame(now,still){
+    if(!base.width)return;
+    const s=stateAt(simT); const S=sim?sim.S:{k:'base'}; const act=s&&s.active; const tt=(now||0)/1000;
+    ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(base,0,0);
+    ctx.setTransform(dpr*k,0,0,dpr*k,0,0);
+    // scenario overlays
+    if(act){
+      if(S.k==='drill'){ctx.fillStyle=C['--crit'];MAPD.zones.forEach(([x,y,w,h])=>{ctx.globalAlpha=.22;ctx.fillRect(x,y,w,h);ctx.globalAlpha=.8;ctx.strokeStyle=C['--crit'];ctx.lineWidth=1.2/k;ctx.strokeRect(x,y,w,h)});ctx.globalAlpha=1;
+        tag(ccx+crx+30,ccy-cry-30,'PLA exercise zones · flights rerouted',C['--crit'])}
+      if(S.k==='quar'||S.k==='block'){
+        ctx.beginPath();ctx.ellipse(ccx,ccy,crx,cry,0,0,7);
+        if(S.k==='block'){ctx.fillStyle=C['--crit'];ctx.globalAlpha=.12;ctx.fill();ctx.globalAlpha=1;ctx.lineWidth=3/k;ctx.setLineDash([])}else{ctx.lineWidth=2/k;ctx.setLineDash([6/k,4/k]);ctx.lineDashOffset=-tt*12/k}
+        ctx.strokeStyle=C['--crit'];ctx.stroke();ctx.setLineDash([]);
+        for(let i=0;i<8;i++){const a=i/8*Math.PI*2+tt*0.08;ship(ccx+Math.cos(a)*crx,ccy+Math.sin(a)*cry,a+Math.PI/2,C['--crit'],fs(0.9))}
+        tag(ccx+crx+12,ccy-cry-14,S.k==='block'?'Blockade · no departures':'Inspection cordon · shipments held for checks',C['--crit'])}
+      if(S.k==='quake'){const ep=P.hualien;for(let i=0;i<3;i++){const ph=((tt*0.6+i/3)%1);ctx.beginPath();ctx.arc(ep[0],ep[1],(6+ph*38)/k,0,7);ctx.strokeStyle=C['--warn'];ctx.globalAlpha=1-ph;ctx.lineWidth=2/k;ctx.stroke()}ctx.globalAlpha=1;
+        tag(ep[0]+30,ep[1]+40,'M7 earthquake · Hualien · fab output cut',C['--warn'])}
+      if(S.k==='lng'){tag(P.scs2[0]+20,P.scs2[1]+26,'LNG deliveries cut · Taiwan power rationing',C['--warn'])}
+    }
+    // agents
+    for(const a of agents){const p=at(a.route,a.u);const col=C[a.col];
+      if(a.kind==='plane')plane(p.x,p.y,p.ang,col,fs(1.05));else if(a.kind==='ship')ship(p.x,p.y,p.ang,col,fs(1.1));else truck(p.x,p.y,p.ang,col,fs(1.1));
+      if(a.inspect||a.blocked){ctx.beginPath();ctx.arc(p.x,p.y,7/k,0,7);ctx.strokeStyle=C['--crit'];ctx.lineWidth=1.4/k;ctx.stroke()}}
+    // nodes
+    const fabs=[P.tainan,P.taichung,P.hsinchu];
+    fabs.forEach(f=>{ctx.beginPath();ctx.arc(f[0],f[1],2.6/k,0,7);ctx.fillStyle=act&&s.tw<1?C['--crit']:C['--wafer'];ctx.fill()});
+    NODES.forEach(n=>{
+      if(n.id==='kum'&&!(sim&&sim.alt))return;
+      let st='--ok';
+      if(n.id==='tw'&&act&&s.tw<1)st=s.tw===0?'--crit':'--warn';
+      if(n.id==='pen'&&s&&s.idle>0)st='--warn';
+      if(n.id==='sin'&&s&&s.stock)st='--crit';
+      if(['pvg','icn','nrt'].includes(n.id))st='--accent';
+      const r=fs(['pvg','icn','nrt'].includes(n.id)?3.5:6);
+      if(st==='--crit'){ctx.beginPath();ctx.arc(n.x,n.y,r+(4+3*Math.sin(tt*5))/k,0,7);ctx.fillStyle=C['--crit'];ctx.globalAlpha=.25;ctx.fill();ctx.globalAlpha=1}
+      ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);ctx.fillStyle=C[st];ctx.fill();ctx.strokeStyle=C['--surface'];ctx.lineWidth=1.6/k;ctx.stroke();
+      if(selected===n.id){ctx.beginPath();ctx.arc(n.x,n.y,r+4/k,0,7);ctx.strokeStyle=C['--ink'];ctx.lineWidth=1.4/k;ctx.stroke()}
+      ctx.font=`600 ${fs(11)}px Manrope, system-ui, sans-serif`;ctx.textAlign=n.al;ctx.lineWidth=3/k;ctx.strokeStyle=C['--surface'];ctx.fillStyle=C['--ink'];
+      const lx=n.x+n.lx/k,ly=n.y+n.ly/k;ctx.strokeText(n.t,lx,ly);ctx.fillText(n.t,lx,ly);
+      if(n.id==='tw'&&act&&s.tw<1){ctx.font=`600 ${fs(10)}px Manrope, system-ui, sans-serif`;ctx.fillStyle=C['--crit'];ctx.strokeText(`Shipments ${Math.round(s.tw*100)}% of normal`,lx,ly+13/k);ctx.fillText(`Shipments ${Math.round(s.tw*100)}% of normal`,lx,ly+13/k)}
+      if(n.id==='pen'&&s&&s.idle>0){ctx.font=`700 ${fs(10)}px Manrope, system-ui, sans-serif`;ctx.fillStyle=C['--warn'];ctx.strokeText(`IDLE ${Math.round(s.idle*100)}%`,lx,ly-17/k);ctx.fillText(`IDLE ${Math.round(s.idle*100)}%`,lx,ly-17/k)}
+      if(n.id==='sin'&&s&&s.stock){ctx.font=`700 ${fs(10)}px Manrope, system-ui, sans-serif`;ctx.fillStyle=C['--crit'];ctx.strokeText('STOCK-OUT',lx,ly+13/k);ctx.fillText('STOCK-OUT',lx,ly+13/k)}
+    });
+    if(s&&sim){
+      const mx=sim.full;
+      gauge(P.pen[0]+11/k,P.pen[1]-44/k,'Die bank + WIP',s.upL,Math.max(1,sim.die+sim.wip),s.upL<1?C['--crit']:C['--wafer']);
+      gauge(P.sin[0]+12/k,P.sin[1]+50/k,'Finished goods',s.fgL,Math.max(1,sim.fg),s.fgL<0.5?C['--crit']:C['--accent']);
+    }
+  }
+  function tag(x,y,text,col){
+    ctx.font=`600 ${fs(10.5)}px Manrope, system-ui, sans-serif`;const w=ctx.measureText(text).width+12/k,h=fs(18);
+    x=Math.min(x,W-w-6/k);
+    ctx.fillStyle=C['--surface'];ctx.globalAlpha=.92;ctx.fillRect(x,y-h+4/k,w,h);ctx.globalAlpha=1;ctx.strokeStyle=col;ctx.lineWidth=1/k;ctx.strokeRect(x,y-h+4/k,w,h);
+    ctx.fillStyle=col;ctx.textAlign='left';ctx.fillText(text,x+6/k,y-1/k);
+  }
+
+  /* ---------- HUD, banner, playhead ---------- */
+  function hud(){
+    const s=stateAt(simT); if(!s||!sim)return;
+    const S=sim.S, wk=Math.max(0,Math.ceil(simT));
+    $('#oWeek').textContent=simT<=0?'Before event':`Week ${wk} of ${sim.horizon}`;
+    const ev=simT<=0?['info','Normal operations']:s.active?[S.k==='base'?'info':'crit',`${S.n} · week ${wk} of ${sim.D}`]:['ok',`${S.n} over · recovering`];
+    if(sim.D===0||S.k==='base')ev.splice(0,2,'info','Normal operations');
+    let b=`<span class="pill ${ev[0]}">${ev[1]}</span>`;
+    if(s.stock)b+=`<span class="pill crit">Stock-out at Changi</span>`;
+    else if(s.idle>0)b+=`<span class="pill warn">Penang idle</span>`;
+    $('#mapBanner').innerHTML=b;
+    const cell=(v,n,c)=>`<div class="${c||''}"><div class="v">${v}</div><div class="n">${n}</div></div>`;
+    $('#mapHud').innerHTML=
+      cell(`${Math.round((s.tw+s.alt)*100)}%`,'Wafer supply arriving',s.tw+s.alt<0.5?'crit':s.tw+s.alt<1?'warn':'ok')+
+      cell(`${s.upL.toFixed(1)} wks`,'Penang die bank + WIP',s.upL<1?'crit':s.upL<sim.die?'warn':'ok')+
+      cell(`${s.fgL.toFixed(1)} wks`,'Changi finished goods',s.fgL<0.5?'crit':s.fgL<sim.fg?'warn':'ok')+
+      cell(`${Math.round(s.cancel)}`,'Wafer flights cancelled',s.cancel>0?'warn':'ok')+
+      cell(`$${(s.lost*sim.rev).toFixed(1)}M`,'Revenue lost so far',s.lost>0?'crit':'ok');
+    $('#mWeek').value=simT;
+    const ph=document.getElementById('dPlay');
+    if(ph&&window.__dep){const x=window.__dep.X(Math.max(0,Math.min(window.__dep.n,simT)));ph.setAttribute('x1',x);ph.setAttribute('x2',x);ph.style.opacity=simT<=0?0:1}
+  }
+
+  function loop(now){
+    requestAnimationFrame(loop);
+    const visible=!$('[data-view="risk"]').hidden&&!document.hidden;
+    const dt=last?Math.min(0.1,(now-last)/1000):0; last=now;
+    if(!visible||!sim)return;
+    if(playing){
+      const dtW=dt*speed/WEEK_SEC; simT+=dtW;
+      if(simT>sim.horizon+0.5){simT=-2;reset()}
+      step(dtW);
+    }
+    frame(now);
+    if(now-hudAt>120){hudAt=now;hud()}
+  }
+
+  function setPlaying(p){playing=p;const b=$('#mPlay');b.textContent=p?'Pause':'Play';b.setAttribute('aria-label',p?'Pause':'Play')}
+  $('#mPlay').addEventListener('click',()=>setPlaying(!playing));
+  $('#mWeek').addEventListener('input',e=>{simT=+e.target.value;reset();hud()});
+  $$('#mSpeed button').forEach(b=>b.addEventListener('click',()=>{speed=+b.dataset.s;$$('#mSpeed button').forEach(x=>x.setAttribute('aria-pressed',x===b))}));
+  cv.addEventListener('click',e=>{
+    const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)/k,y=(e.clientY-r.top)/k;
+    let best=null,bd=22/k;NODES.forEach(n=>{if(n.id==='kum'&&!(sim&&sim.alt))return;const d=Math.hypot(n.x-x,n.y-y);if(d<bd){bd=d;best=n}});
+    selected=best?best.id:null;
+    $('#mapInfo').innerHTML=best?`<b style="color:var(--ink)">${best.t}.</b> ${best.d}`:'Select a site on the map for details. Each plane is one shipment; time is compressed so a week plays in about two seconds.';
+  });
+  if(window.ResizeObserver)new ResizeObserver(size).observe(box);else window.addEventListener('resize',size);
+
+  return {
+    set(data,restart){
+      const altChanged=!sim||sim.alt!==data.alt; sim=data;$('#mWeek').max=data.horizon; if(altChanged)drawBase();
+      if(restart){simT=-2;reset()}
+      if(simT>data.horizon)simT=data.horizon;
+      hud();
+    },
+    theme(){theme();},
+    start(){theme();size();setPlaying(playing);requestAnimationFrame(loop)}
+  };
+})();
+
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>{show(b.dataset.go);try{history.replaceState(null,'','#'+b.dataset.go)}catch(e){}const el=document.getElementById('app');if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}));
+/* ---------- init ---------- */
+function drawAll(){drawNet();renderGantt();renderRisk();LiveMap.theme();runSim()}
+renderLots();renderFoundries();setScenDefaults();LiveMap.start();drawAll();nodeDetail('fab1');
+let start='tower';const h=location.hash.replace('#','');
+if(['tower','lots','lead','risk','alt'].includes(h))start=h;else{try{const s=localStorage.getItem('jj-tab');if(s)start=s}catch(e){}}
+show(start);
+const mq=matchMedia('(prefers-color-scheme: dark)');mq.addEventListener&&mq.addEventListener('change',drawAll);
+new MutationObserver(drawAll).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+})();
+</script>
+
+<script>
+/* ---------- hero wafer: probe sweep across a die map ---------- */
+(function(){
+  const cv=document.getElementById('waferCv'); if(!cv)return;
+  const ctx=cv.getContext('2d'); let W=0,dpr=1,dies=[],R=0,cx=0,cy=0,cell=0;
+  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function build(){
+    const w=cv.clientWidth||360; dpr=Math.min(2,devicePixelRatio||1); W=w;
+    cv.width=w*dpr;cv.height=w*dpr; R=w*0.44; cx=cy=w/2; cell=Math.max(9,w/26); dies=[];
+    for(let y=-R;y<R;y+=cell)for(let x=-R;x<R;x+=cell){
+      const corners=[[x,y],[x+cell,y],[x,y+cell],[x+cell,y+cell]];
+      if(corners.every(([a,b])=>Math.hypot(a,b)<R-cell*0.35)) dies.push({x,y,fail:Math.random()<.045,lit:0,seed:Math.random()});
+    }
+  }
+  function draw(t){
+    const C=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const acc=C('--accent'),waf=C('--wafer'),crit=C('--crit'),line=C('--line');
+    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,W);
+    // wafer disc
+    const g=ctx.createRadialGradient(cx-R*.3,cy-R*.4,R*.1,cx,cy,R*1.05);g.addColorStop(0,'rgba(168,132,255,.20)');g.addColorStop(.6,'rgba(57,213,255,.06)');g.addColorStop(1,'rgba(10,14,25,.9)');
+    ctx.beginPath();ctx.arc(cx,cy,R,0.5*Math.PI+0.06,2.5*Math.PI-0.06);ctx.closePath();ctx.fillStyle=g;ctx.fill();ctx.strokeStyle='rgba(57,213,255,.45)';ctx.lineWidth=1.2;ctx.stroke();
+    // probe sweep position (row by row)
+    const sweep=still?R*0.3:((t/1000*0.32)%1)*2*R-R;
+    dies.forEach(d=>{
+      const px=cx+d.x, py=cy+d.y;
+      const passed=d.y+cell/2<sweep;
+      if(!still&&Math.abs(d.y+cell/2-sweep)<cell*0.6)d.lit=1;
+      d.lit*=0.965;
+      let fill=passed?(d.fail?crit:'rgba(57,213,255,.22)'):'rgba(255,255,255,.045)';
+      ctx.fillStyle=fill;ctx.fillRect(px+1,py+1,cell-2,cell-2);
+      if(d.lit>0.05){ctx.fillStyle=d.fail?crit:acc;ctx.globalAlpha=d.lit*.85;ctx.fillRect(px+1,py+1,cell-2,cell-2);ctx.globalAlpha=1}
+      if(passed&&!d.fail&&d.seed>.93){ctx.fillStyle=waf;ctx.globalAlpha=.55+.45*Math.sin(t/400+d.seed*20);ctx.fillRect(px+1,py+1,cell-2,cell-2);ctx.globalAlpha=1}
+    });
+    // probe head line
+    if(!still){ctx.strokeStyle=acc;ctx.globalAlpha=.9;ctx.lineWidth=1.5;const half=Math.sqrt(Math.max(0,R*R-sweep*sweep));ctx.beginPath();ctx.moveTo(cx-half,cy+sweep);ctx.lineTo(cx+half,cy+sweep);ctx.stroke();ctx.globalAlpha=1;
+      ctx.shadowColor=acc;ctx.shadowBlur=14;ctx.beginPath();ctx.arc(cx+Math.sin(t/700)*half*.8,cy+sweep,3,0,7);ctx.fillStyle=acc;ctx.fill();ctx.shadowBlur=0}
+    // yield readout
+    const tested=dies.filter(d=>d.y+cell/2<sweep), good=tested.filter(d=>!d.fail).length;
+    ctx.font='600 11px "JetBrains Mono", ui-monospace, monospace';ctx.fillStyle=line;ctx.textAlign='left';
+    ctx.fillStyle='rgba(234,240,255,.55)';ctx.fillText(`DIE ${dies.length}  ·  TESTED ${tested.length}  ·  YIELD ${tested.length?(good/tested.length*100).toFixed(1):'--'}%`,10,16);
+  }
+  function loop(t){draw(t);if(!still)requestAnimationFrame(loop)}
+  build();requestAnimationFrame(loop);
+  if(window.ResizeObserver)new ResizeObserver(()=>{build();if(still)draw(0)}).observe(cv);
+})();
+</script>
+</body>
+</html>
